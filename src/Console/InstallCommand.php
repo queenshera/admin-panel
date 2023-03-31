@@ -16,34 +16,34 @@ class InstallCommand extends Command
     public function handle()
     {
         // install other packages
-        if (!$this->requireComposerPackages('illuminate/console: ^10.0')) {
+        if (!$this->requireComposerPackages('illuminate/support')) {
             return 1;
         }
-        if (!$this->requireComposerPackages('illuminate/support: ^10.0')) {
+        if (!$this->requireComposerPackages('illuminate/console')) {
             return 1;
         }
-        if (!$this->requireComposerPackages('barryvdh/laravel-debugbar: ^3.8')) {
+        if (!$this->requireComposerPackages('barryvdh/laravel-debugbar')) {
             return 1;
         }
-        if (!$this->requireComposerPackages('barryvdh/laravel-dompdf: ^2.0')) {
+        if (!$this->requireComposerPackages('barryvdh/laravel-dompdf')) {
             return 1;
         }
-        if (!$this->requireComposerPackages('laravel/ui: ^4.2')) {
+        if (!$this->requireComposerPackages('laravel/ui')) {
             return 1;
         }
-        if (!$this->requireComposerPackages('league/flysystem-aws-s3-v3: ^3.12')) {
+        if (!$this->requireComposerPackages('league/flysystem-aws-s3-v3')) {
             return 1;
         }
-        if (!$this->requireComposerPackages('livewire/livewire:^2.12')) {
+        if (!$this->requireComposerPackages('livewire/livewire')) {
             return 1;
         }
-        if (!$this->requireComposerDevPackages('pestphp/pest:^2.0')) {
+        if (!$this->requireComposerDevPackages('pestphp/pest')) {
             return 1;
         }
-        if (!$this->requireComposerDevPackages('pestphp/pest-plugin-laravel:^2.0')) {
+        if (!$this->requireComposerDevPackages('pestphp/pest-plugin-laravel')) {
             return 1;
         }
-        if (!$this->requireComposerPackages('kreait/laravel-firebase:^5.1')) {
+        if (!$this->requireComposerPackages('kreait/laravel-firebase')) {
             return 1;
         }
         copy(__DIR__ . '/../../stubs/pest-tests/Pest.php', base_path('tests/Pest.php'));
