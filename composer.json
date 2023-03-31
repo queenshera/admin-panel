@@ -1,0 +1,26 @@
+{
+    "name": "queenshera/admin-panel",
+    "description": "AdminLTE based admin panel while setting your project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.0",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Queenshera\\AdminPanel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\": "stubs/app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Queenshera Infotech",
+            "email": "support@queensherainfotech.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
