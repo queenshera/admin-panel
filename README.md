@@ -10,7 +10,7 @@ Read up here for getting started and understanding the setup of admin panel
 -   If your project using composer, run the below command
 
 ```
-composer require queenshera/laravel-admin-panel
+composer require queenshera/admin-panel
 ```
 
 - Add the `Queenshera\AdminPanel\QsAdminPanelServiceProvider::class,` provider to the `providers` array in `config/app.php`:
@@ -46,4 +46,4 @@ All pull requests with additional packages or test cases are welcome
 
 ## License
 
-Queenshera Admin Panel SDK is released under the MIT License. See [LICENSE](LICENSE) file for more details.
+Queenshera Admin Panel SDK is released under the MIT License. See [LICENSE](https://github.com/queenshera/laravel-admin-panel/blob/dev/LICENCE) file for more details.
