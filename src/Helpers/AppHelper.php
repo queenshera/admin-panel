@@ -3,6 +3,7 @@
 namespace Queenshera\AdminPanel\Helpers;
 
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Storage;
 use NumberFormatter;
 
 class AppHelper
@@ -37,6 +38,22 @@ class AppHelper
             return strtoupper(substr(md5(time() * rand(1000000, 9999999)), 0, $length));
         }
         return substr(md5(time() * rand(1000000, 9999999)), 0, $length);
+    }
+
+    public function uploadFileToLocal($file, $storagePath)
+    {
+        Storage::put('public/' . $storagePath, file_get_contents($file));
+        $filePath = config('app.url') . '/storage/' . $storagePath;
+
+        return $filePath;
+    }
+
+    public function uploadFileToS3($file, $storagePath)
+    {
+        Storage::disk('s3')->put($storagePath, file_get_contents($file));
+        $filePath = config('filesystems.disks.s3.url') . $storagePath;
+
+        return $filePath;
     }
 
 }

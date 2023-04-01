@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Queenshera\AdminPanel\Helpers\AppHelper;
 
 class HomeController extends Controller
 {
@@ -26,7 +27,7 @@ class HomeController extends Controller
 
     public function profile(Request $request)
     {
-        return view('profile')->with('redirect',$request->redirect);
+        return view('profile')->with('redirect', $request->redirect);
     }
 
     public function profileUpdate(Request $request)
@@ -34,8 +35,7 @@ class HomeController extends Controller
         $update['name'] = $request->name;
         $update['mobile'] = $request->mobile;
 
-        if($request->password)
-        {
+        if ($request->password) {
             $validator = Validator::make($request->all(), [
                 'password' => ['required', new OldPasswordNoMatch],
             ]);
@@ -45,26 +45,27 @@ class HomeController extends Controller
             $update['password'] = Hash::make($request->password);
         }
 
-        if($request->file('photo'))
-        {
+        if ($request->file('photo')) {
             $validator = Validator::make($request->all(), [
                 'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
             ]);
-            if($validator->fails())
-            {
+            if ($validator->fails()) {
                 return back()->withError($validator->errors()->first());
             }
 
             $file = $request->file('photo');
-            $name = 'photo_'.date('ymdHis') . '.' . $file->getClientOriginalExtension();
+            $name = 'photo_' . date('ymdHis') . '.' . $file->getClientOriginalExtension();
             $storagepath = 'profile/' . $name;
-            Storage::disk('s3')->put($storagepath, file_get_contents($file));
-            $filepath = config('filesystems.disks.s3.url').$storagepath;
-            $update['photo'] = $filepath;
+
+            $helper = new AppHelper();
+            if (config('filesystems.disks.s3.enabled')) {
+                $update['photo'] = $helper->uploadFileToS3($file, $storagepath);
+            } else {
+                $update['photo'] = $helper->uploadFileToLocal($file, $storagepath);
+            }
         }
-        User::where('id',auth()->user()->id)->update($update);
-        if($request->redirect)
-        {
+        User::where('id', auth()->user()->id)->update($update);
+        if ($request->redirect) {
             return Redirect::to($request->redirect);
         }
         return back()->withSuccess('Profile data updated successfully');

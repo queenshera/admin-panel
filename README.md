@@ -6,8 +6,8 @@ Read up here for getting started and understanding the setup of admin panel
 
 
 ## Installation
-
--   If your project using composer, run the below command
+- Ensure you have enabled sodium extension in your php.ini file, otherwise it will generate error while installing adminPanel
+- If your project using composer, run the below command
 
 ```
 composer require queenshera/admin-panel
@@ -25,24 +25,26 @@ composer require queenshera/admin-panel
 
 ## Configuration
 
-The environment and config files comes with defaults and placeholders. Configure data in environment file to use any related services.
+- The environment and config files comes with defaults and placeholders.
+- Configure environment key-values in environment file to use aws s3, textlocal, msg91, razorpay services.
+- 
 
 ## Available Services in this package
 - Debugbar (tested)
 - DomPDF (tested)
+- Livewire (tested)
+- AWS S3 (tested)
+- Firebase (not tested yet)
 - PestPHP (tested)
-- AWS S3
-- Livewire
-- Firebase
 - Textlocal SMS service (tested)
 - MSG91 SMS service (tested)
-- Razorpay payment gateway (tested)
+- Razorpay payment gateway (tested, but need to update)
 - 
 
 ## Development
 
-- All added packages are not tested yet and under developments
-All pull requests with additional packages or test cases are welcome
+- All added packages are not tested yet and under developments.
+- All pull requests with additional packages or test cases are welcome.
 
 ## License
 

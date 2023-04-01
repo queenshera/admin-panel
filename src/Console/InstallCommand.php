@@ -4,6 +4,7 @@ namespace Queenshera\AdminPanel\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use phpDocumentor\Reflection\Types\Void_;
 use RuntimeException;
 use Symfony\Component\Process\Process;
 
@@ -31,24 +32,12 @@ class InstallCommand extends Command
         if (!$this->requireComposerPackages('laravel/ui')) {
             return 1;
         }
-        if (!$this->requireComposerPackages('league/flysystem-aws-s3-v3')) {
-            return 1;
-        }
         if (!$this->requireComposerPackages('livewire/livewire')) {
             return 1;
         }
-        if (!$this->requireComposerDevPackages('pestphp/pest')) {
-            return 1;
-        }
-        if (!$this->requireComposerDevPackages('pestphp/pest-plugin-laravel')) {
-            return 1;
-        }
-        if (!$this->requireComposerPackages('kreait/laravel-firebase')) {
-            return 1;
-        }
-        copy(__DIR__ . '/../../stubs/pest-tests/Pest.php', base_path('tests/Pest.php'));
-        copy(__DIR__ . '/../../stubs/pest-tests/Feature/ExampleTest.php', base_path('tests/Feature/ExampleTest.php'));
-        copy(__DIR__ . '/../../stubs/pest-tests/Unit/ExampleUnitTest.php', base_path('tests/Unit/ExampleTest.php'));
+        $this->installS3();
+        $this->installFirebase();
+        $this->installPest();
 
         // copy controller files
         (new Filesystem())->copyDirectory(__DIR__ . '/../Http/Controllers', app_path('Http/Controllers'));
@@ -79,10 +68,40 @@ class InstallCommand extends Command
         copy(__DIR__ . '/../routes/web.php', base_path('routes/web.php'));
         copy(__DIR__ . '/../routes/api.php', base_path('routes/api.php'));
 
+        // link storage
+        $this->runCommands(['php artisan storage:link']);
+
         // copy env file details
         copy(__DIR__ . '/../../.env.example', base_path('.env.example'));
         copy(__DIR__ . '/../../.env.example', base_path('.env'));
         $this->runCommands(['php artisan config:cache', 'php artisan key:generate', 'php artisan config:cache']);
+    }
+
+    protected function installS3()
+    {
+        if (!$this->requireComposerPackages('league/flysystem-aws-s3-v3')) {
+            return 1;
+        }
+    }
+
+    protected function installFirebase()
+    {
+        if (!$this->requireComposerPackages('kreait/laravel-firebase')) {
+            return 1;
+        }
+    }
+
+    protected function installPest()
+    {
+        if (!$this->requireComposerDevPackages('pestphp/pest')) {
+            return 1;
+        }
+        if (!$this->requireComposerDevPackages('pestphp/pest-plugin-laravel')) {
+            return 1;
+        }
+        copy(__DIR__ . '/../../stubs/pest-tests/Pest.php', base_path('tests/Pest.php'));
+        copy(__DIR__ . '/../../stubs/pest-tests/Feature/ExampleTest.php', base_path('tests/Feature/ExampleTest.php'));
+        copy(__DIR__ . '/../../stubs/pest-tests/Unit/ExampleUnitTest.php', base_path('tests/Unit/ExampleTest.php'));
     }
 
     protected function requireComposerPackages($packages)
