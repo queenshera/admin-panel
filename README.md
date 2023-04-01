@@ -1,3 +1,12 @@
+<p align="center">
+    <a href="https://packagist.org/packages/queenshera/admin-panel">
+        <img src="https://img.shields.io/packagist/v/queenshera/admin-panel" alt="Latest Stable Version">
+    </a>
+    <a href="https://packagist.org/packages/queenshera/admin-panel">
+        <img src="https://img.shields.io/packagist/l/queenshera/admin-panel" alt="License">
+    </a>
+</p>
+
 # Laravel Admin-Panel
 Read up here for getting started and understanding the setup of admin panel
 
