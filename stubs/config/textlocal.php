@@ -13,6 +13,6 @@ return [
 
     'key' => env('TEXTLOCAL_KEY'),
     'sender' => env('TEXTLOCAL_SENDER'),
-    'url' => env('TEXTLOCAL_URL','https://api.txtlocal.in/')
+    'url' => env('TEXTLOCAL_URL','https://api.textlocal.in/')
 
 ];

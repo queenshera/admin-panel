@@ -2,12 +2,18 @@
 
 namespace Queenshera\AdminPanel\Helpers;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
 use NumberFormatter;
 
 class AppHelper
 {
+    public function retfloat($number,$decimals=2)
+    {
+        return number_format((float)$number, $decimals, '.', '');
+    }
+
     public function formatCurrency(float $amount)
     {
         $value = number_format($amount, 2, '.', ',');
@@ -32,12 +38,30 @@ class AppHelper
         return ucwords(sprintf('%s %s and %s %s', $integer_value, 'rupee', $fraction_value, 'paise'));
     }
 
+    public function randomDigits($length=6)
+    {
+        return rand(pow(10, $length-1), pow(10, $length)-1);
+    }
+
     public function randomid($length = 10, $upperCase = false)
     {
         if ($upperCase) {
             return strtoupper(substr(md5(time() * rand(1000000, 9999999)), 0, $length));
         }
         return substr(md5(time() * rand(1000000, 9999999)), 0, $length);
+    }
+
+    public function getMonthListFromToDate(Carbon $startDate, Carbon $endDate)
+    {
+        $startDate = $startDate->startOfMonth();
+        $endDate   = $endDate->startOfMonth();
+
+        do
+        {
+            $months[] = $startDate->format('F Y');
+        } while ($startDate->addMonth() < $endDate);
+
+        return $months;
     }
 
     public function uploadFileToLocal($file, $storagePath)
