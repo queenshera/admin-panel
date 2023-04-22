@@ -14,6 +14,10 @@ use Queenshera\AdminPanel\Helpers\AppHelper;
 
 class UserController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function signin(Request $request)
     {
         if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
@@ -29,6 +33,10 @@ class UserController extends Controller
         return $error;
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function signup(Request $request)
     {
         $user = User::where('email', $request->email)->first();
@@ -66,6 +74,10 @@ class UserController extends Controller
         return $success;
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function googleLogin(Request $request)
     {
         $helper = new AppHelper();
@@ -96,6 +108,10 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function forgotPass(Request $request)
     {
         $user = User::where('email', $request->email)->first();
@@ -117,6 +133,10 @@ class UserController extends Controller
         return $error;
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function fcmUpdate(Request $request)
     {
         User::where('id', auth()->user()->id)->update(['fcmToken' => $request->fcmToken]);

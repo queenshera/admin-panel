@@ -2,8 +2,20 @@
 
 namespace Queenshera\AdminPanel\Helpers;
 
+/**
+ * This class is used to send message, send otp and verify otp on msg91 platform
+ */
+
 class Msg91Helper
 {
+    /**
+     * This function is used to send message
+     *
+     * @param $templateId
+     * @param $mobiles
+     * @param $messageData
+     * @return mixed
+     */
     public function sendMessage($templateId, $mobiles, $messageData)
     {
         $data['template_id'] = $templateId;
@@ -24,6 +36,15 @@ class Msg91Helper
         return json_decode($response);
     }
 
+    /**
+     * This function is used to send otp on given mobile number
+     *
+     * @param $templateId
+     * @param $mobile
+     * @param $otpLength
+     * @param $otp
+     * @return mixed
+     */
     public function sendOtp($templateId, $mobile, $otpLength = 4, $otp = null)
     {
         $data['template_id'] = $templateId;
@@ -43,6 +64,14 @@ class Msg91Helper
         return json_decode($response);
     }
 
+    /**
+     * This function is used to resend otp on given mmobile number
+     *
+     * @param $mobile
+     * @param $type
+     * @return mixed
+     */
+
     public function resendOtp($mobile, $type = 'text')
     {
         $ch = curl_init(config('msg91.url') . 'otp/retry?mobile=' . $mobile . '&retrytype=' . $type);
@@ -54,6 +83,13 @@ class Msg91Helper
         return json_decode($response);
     }
 
+    /**
+     * This function is used to verify otp sent on mobile number
+     *
+     * @param $mobile
+     * @param $otp
+     * @return mixed
+     */
     public function verifyOtp($mobile, $otp)
     {
         $ch = curl_init(config('msg91.url') . 'otp/verify?mobile=' . $mobile . '&otp=' . $otp);

@@ -2,8 +2,19 @@
 
 namespace Queenshera\AdminPanel\Helpers;
 
+/**
+ * This class is used to send message, schedule message on Textlocal platform
+ */
+
 class TextlocalHelper
 {
+    /**
+     * This function is used to send message
+     *
+     * @param $numbers
+     * @param $message
+     * @return mixed
+     */
     public function sendMessage($numbers, $message)
     {
         $message = rawurlencode($message);
@@ -23,6 +34,13 @@ class TextlocalHelper
         return json_decode($response);
     }
 
+    /**
+     * This function is used to schedule message send
+     * @param $numbers
+     * @param $message
+     * @param $timestamp
+     * @return mixed
+     */
     public function scheduleMessage($numbers, $message, $timestamp)
     {
         $message = rawurlencode($message);
@@ -43,6 +61,11 @@ class TextlocalHelper
         return json_decode($response);
     }
 
+    /**
+     * This function is used to check balance remaining in account
+     *
+     * @return mixed
+     */
     public function checkBalance()
     {
         $data['apikey'] = config('textlocal.key');
@@ -57,6 +80,11 @@ class TextlocalHelper
         return json_decode($response);
     }
 
+    /**
+     * This function is used to get list of message templates
+     *
+     * @return mixed
+     */
     public function getTemplates()
     {
         $data['apikey'] = config('textlocal.key');
@@ -71,6 +99,11 @@ class TextlocalHelper
         return json_decode($response);
     }
 
+    /**
+     * This function is used to get list of senders
+     *
+     * @return mixed
+     */
     public function getSenders()
     {
         $data['apikey'] = config('textlocal.key');
@@ -85,6 +118,11 @@ class TextlocalHelper
         return json_decode($response);
     }
 
+    /**
+     * This function is used to get list of scheduled messages
+     *
+     * @return mixed
+     */
     public function getScheduledMessages()
     {
         $data['apikey'] = config('textlocal.key');
@@ -99,6 +137,12 @@ class TextlocalHelper
         return json_decode($response);
     }
 
+    /**
+     * This function is used to cancel scheduled message
+     *
+     * @param $messageId
+     * @return mixed
+     */
     public function cancelScheduledMessages($messageId)
     {
         $data['apikey'] = config('textlocal.key');
@@ -114,6 +158,11 @@ class TextlocalHelper
         return json_decode($response);
     }
 
+    /**
+     * This function is used to create short url of given url
+     * @param $url
+     * @return mixed
+     */
     public function createShortUrl($url)
     {
         $data['apikey'] = config('textlocal.key');

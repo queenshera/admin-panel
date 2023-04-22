@@ -4,7 +4,6 @@ namespace Queenshera\AdminPanel\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use phpDocumentor\Reflection\Types\Void_;
 use RuntimeException;
 use Symfony\Component\Process\Process;
 
@@ -14,6 +13,9 @@ class InstallCommand extends Command
 
     protected $description = 'Install admin panel components and resources';
 
+    /**
+     * @return int|void
+     */
     public function handle()
     {
         // install other packages
@@ -77,6 +79,9 @@ class InstallCommand extends Command
         $this->runCommands(['php artisan config:cache', 'php artisan key:generate', 'php artisan config:cache']);
     }
 
+    /**
+     * @return int|void
+     */
     protected function installS3()
     {
         if (!$this->requireComposerPackages('league/flysystem-aws-s3-v3')) {
@@ -84,6 +89,9 @@ class InstallCommand extends Command
         }
     }
 
+    /**
+     * @return int|void
+     */
     protected function installFirebase()
     {
         if (!$this->requireComposerPackages('kreait/laravel-firebase')) {
@@ -91,6 +99,9 @@ class InstallCommand extends Command
         }
     }
 
+    /**
+     * @return int|void
+     */
     protected function installPest()
     {
         if (!$this->requireComposerDevPackages('pestphp/pest')) {
@@ -104,6 +115,10 @@ class InstallCommand extends Command
         copy(__DIR__ . '/../../stubs/pest-tests/Unit/ExampleUnitTest.php', base_path('tests/Unit/ExampleTest.php'));
     }
 
+    /**
+     * @param $packages
+     * @return bool
+     */
     protected function requireComposerPackages($packages)
     {
         $command = array_merge(
@@ -118,6 +133,10 @@ class InstallCommand extends Command
             });
     }
 
+    /**
+     * @param $packages
+     * @return bool
+     */
     protected function removeComposerDevPackages($packages)
     {
         $command = array_merge(
@@ -132,6 +151,10 @@ class InstallCommand extends Command
                 }) === 0;
     }
 
+    /**
+     * @param $packages
+     * @return bool
+     */
     protected function requireComposerDevPackages($packages)
     {
         $command = array_merge(
@@ -146,6 +169,10 @@ class InstallCommand extends Command
                 }) === 0;
     }
 
+    /**
+     * @param $commands
+     * @return void
+     */
     protected function runCommands($commands)
     {
         $process = Process::fromShellCommandline(implode(' && ', $commands), null, null, null, null);

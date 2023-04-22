@@ -20,16 +20,27 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
     public function home()
     {
         return view('home');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
     public function profile(Request $request)
     {
         return view('profile')->with('redirect', $request->redirect);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function profileUpdate(Request $request)
     {
         $update['name'] = $request->name;
@@ -71,6 +82,10 @@ class HomeController extends Controller
         return back()->withSuccess('Profile data updated successfully');
     }
 
+    /**
+     * @param Request $request
+     * @return mixed
+     */
     public function logout(Request $request)
     {
         Auth::logout();

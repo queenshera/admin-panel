@@ -7,7 +7,7 @@ use Closure;
 class DisableMoveBack
 {
     /**
-     * Handle an incoming request.
+     * Revalidates authentication and expires in case of authentication fails
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next

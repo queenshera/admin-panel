@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 class OldPasswordNoMatch implements Rule
 {
     /**
-     * Create a new rule instance.
+     * Validates if new password does not match with old password
      *
      * @return void
      */
