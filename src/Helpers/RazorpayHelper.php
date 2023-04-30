@@ -2,10 +2,11 @@
 
 namespace Queenshera\AdminPanel\Helpers;
 
+use Carbon\Carbon;
+
 /**
  * This class is used to integrate Razorpay payment gateway to project with minimal data
  */
-
 class RazorpayHelper
 {
     /**
@@ -26,16 +27,23 @@ class RazorpayHelper
      */
     public function createOrder($data)
     {
+        $apiData['amount'] = $data['amount'];
+        $apiData['currency'] = 'INR';
+        $apiData['receipt'] = $data['receipt'] ?? '';
+        $apiData['notes'] = $data['notes'] ?? json_decode('{}');
+
         $curl = curl_init(config('razorpay.url') . 'orders');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data, false));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($apiData, false));
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
         $result = curl_exec($curl);
         curl_close($curl);
 
-        return json_decode($result, true);
+        $result = json_decode($result, true);
+
+        return $result;
     }
 
     /**
@@ -45,7 +53,7 @@ class RazorpayHelper
      */
     public function allOrders()
     {
-        $curl = curl_init('https://api.razorpay.com/v1/orders');
+        $curl = curl_init(config('razorpay.url') . 'orders');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -53,7 +61,11 @@ class RazorpayHelper
         $result = curl_exec($curl);
         curl_close($curl);
 
-        return json_decode($result, true);
+        $result = json_decode($result, true);
+
+        $orders = $result['items'];
+
+        return $orders;
     }
 
     /**
@@ -64,7 +76,7 @@ class RazorpayHelper
      */
     public function fetchOrder($orderId)
     {
-        $curl = curl_init('https://api.razorpay.com/v1/orders/' . $orderId);
+        $curl = curl_init(config('razorpay.url') . 'orders/' . $orderId);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -83,7 +95,7 @@ class RazorpayHelper
      */
     public function fetchOrderPayments($orderId)
     {
-        $curl = curl_init('https://api.razorpay.com/v1/orders/' . $orderId . '/payments');
+        $curl = curl_init(config('razorpay.url') . 'orders/' . $orderId . '/payments');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -91,7 +103,11 @@ class RazorpayHelper
         $result = curl_exec($curl);
         curl_close($curl);
 
-        return json_decode($result, true);
+        $result = json_decode($result, true);
+
+        $payments = $result['items'];
+
+        return $payments;
     }
 
     /**
@@ -102,7 +118,9 @@ class RazorpayHelper
      */
     public function capturePayment($paymentId, $data)
     {
-        $curl = curl_init('https://api.razorpay.com/v1/payments/' . $paymentId . '/capture');
+        $data['currency'] = 'INR';
+
+        $curl = curl_init(config('razorpay.url') . 'payments/' . $paymentId . '/capture');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -122,7 +140,7 @@ class RazorpayHelper
      */
     public function fetchPayment($paymentId)
     {
-        $curl = curl_init('https://api.razorpay.com/v1/payments/' . $paymentId);
+        $curl = curl_init(config('razorpay.url') . 'payments/' . $paymentId);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -140,7 +158,7 @@ class RazorpayHelper
      */
     public function allSettlements()
     {
-        $curl = curl_init('https://api.razorpay.com/v1/settlements');
+        $curl = curl_init(config('razorpay.url') . 'settlements');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -148,7 +166,11 @@ class RazorpayHelper
         $result = curl_exec($curl);
         curl_close($curl);
 
-        return json_decode($result, true);
+        $result = json_decode($result, true);
+
+        $settlements = $result['items'];
+
+        return $settlements;
     }
 
     /**
@@ -159,7 +181,7 @@ class RazorpayHelper
      */
     public function fetchSettlement($settlementId)
     {
-        $curl = curl_init('https://api.razorpay.com/v1/payments/' . $settlementId);
+        $curl = curl_init(config('razorpay.url') . 'settlements/' . $settlementId);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -179,7 +201,7 @@ class RazorpayHelper
      */
     public function createRefund($paymentId, $data)
     {
-        $curl = curl_init('https://api.razorpay.com/v1/payments/' . $paymentId . '/refund');
+        $curl = curl_init(config('razorpay.url') . 'payments/' . $paymentId . '/refund');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -202,7 +224,7 @@ class RazorpayHelper
     {
         $data['speed'] = 'optimum';
 
-        $curl = curl_init('https://api.razorpay.com/v1/payments/' . $paymentId . '/refund');
+        $curl = curl_init(config('razorpay.url') . 'payments/' . $paymentId . '/refund');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -221,7 +243,7 @@ class RazorpayHelper
      */
     public function allRefunds()
     {
-        $curl = curl_init('https://api.razorpay.com/v1/refunds');
+        $curl = curl_init(config('razorpay.url') . 'refunds');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -229,7 +251,11 @@ class RazorpayHelper
         $result = curl_exec($curl);
         curl_close($curl);
 
-        return json_decode($result, true);
+        $result = json_decode($result, true);
+
+        $refunds = $result['items'];
+
+        return $refunds;
     }
 
     /**
@@ -240,7 +266,7 @@ class RazorpayHelper
      */
     public function fetchRefund($refundId)
     {
-        $curl = curl_init('https://api.razorpay.com/v1/refunds/' . $refundId);
+        $curl = curl_init(config('razorpay.url') . 'refunds/' . $refundId);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -258,11 +284,25 @@ class RazorpayHelper
      */
     public function createPaymentLink($data)
     {
+        $customer['name'] = $data['name'] ?? '';
+        $customer['email'] = $data['email'] ?? '';
+        $customer['contact'] = $data['mobile'] ?? '';
+
+        $notify['sms'] = true;
+        $notify['email'] = true;
+
+        $requestData['amount'] = $data['amount'];
+        $requestData['notes'] = $data['notes'] ?? json_decode('{}');
+        $requestData['customer'] = $customer;
+        $requestData['notify'] = $notify;
+        $requestData['reminder_enable'] = true;
+        $requestData['description'] = $data['description'];
+
         $curl = curl_init(config('razorpay.url') . 'payment_links');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data, false));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($requestData, false));
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
         $result = curl_exec($curl);
         curl_close($curl);
@@ -277,7 +317,7 @@ class RazorpayHelper
      */
     public function allPaymentLinks()
     {
-        $curl = curl_init('https://api.razorpay.com/v1/payment_links');
+        $curl = curl_init(config('razorpay.url') . 'payment_links');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -285,7 +325,11 @@ class RazorpayHelper
         $result = curl_exec($curl);
         curl_close($curl);
 
-        return json_decode($result, true);
+        $result = json_decode($result, true);
+
+        $links = $result['payment_links'];
+
+        return $links;
     }
 
     /**
@@ -296,7 +340,7 @@ class RazorpayHelper
      */
     public function fetchPaymentLink($paymentLinkId)
     {
-        $curl = curl_init('https://api.razorpay.com/v1/payment_links/' . $paymentLinkId);
+        $curl = curl_init(config('razorpay.url') . 'payment_links/' . $paymentLinkId);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -315,9 +359,9 @@ class RazorpayHelper
      */
     public function cancelPaymentLink($paymentLinkId)
     {
-        $curl = curl_init('https://api.razorpay.com/v1/payment_links/' . $paymentLinkId . '/cancel');
+        $curl = curl_init(config('razorpay.url') . 'payment_links/' . $paymentLinkId . '/cancel');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
         $result = curl_exec($curl);
@@ -334,11 +378,21 @@ class RazorpayHelper
      */
     public function createVirtualAccount($data)
     {
+        $requestData['receivers']['types'] = ['vpa', 'bank_account'];
+        $requestData['description'] = $data['description'] ?? '';
+        $requestData['notes'] = $data['notes'] ?? json_decode('{}');
+
+        $customer['name'] = $data['name'] ?? '';
+        $customer['email'] = $data['email'] ?? '';
+        $customer['contact'] = $data['mobile'] ?? '';
+
+        $requestData['customer'] = $customer;
+
         $curl = curl_init(config('razorpay.url') . 'virtual_accounts');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data, false));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($requestData, false));
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
         $result = curl_exec($curl);
         curl_close($curl);
@@ -353,7 +407,7 @@ class RazorpayHelper
      */
     public function allVirtualAccounts()
     {
-        $curl = curl_init('https://api.razorpay.com/v1/virtual_accounts');
+        $curl = curl_init(config('razorpay.url') . 'virtual_accounts');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -361,7 +415,11 @@ class RazorpayHelper
         $result = curl_exec($curl);
         curl_close($curl);
 
-        return json_decode($result, true);
+        $result = json_decode($result, true);
+
+        $accounts = $result['items'];
+
+        return $accounts;
     }
 
     /**
@@ -372,7 +430,7 @@ class RazorpayHelper
      */
     public function fetchVirtualAccount($virtualAccountId)
     {
-        $curl = curl_init('https://api.razorpay.com/v1/virtual_accounts/' . $virtualAccountId);
+        $curl = curl_init(config('razorpay.url') . 'virtual_accounts/' . $virtualAccountId);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -391,7 +449,7 @@ class RazorpayHelper
      */
     public function fetchVirtualAccountPayments($virtualAccountId)
     {
-        $curl = curl_init('https://api.razorpay.com/v1/virtual_accounts/' . $virtualAccountId . '/payments');
+        $curl = curl_init(config('razorpay.url') . 'virtual_accounts/' . $virtualAccountId . '/payments');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -399,7 +457,11 @@ class RazorpayHelper
         $result = curl_exec($curl);
         curl_close($curl);
 
-        return json_decode($result, true);
+        $result = json_decode($result, true);
+
+        $payments = $result['items'];
+
+        return $payments;
     }
 
     /**
@@ -408,11 +470,11 @@ class RazorpayHelper
      * @param $virtualAccountId
      * @return mixed
      */
-    public function cancelVirtualAccount($virtualAccountId)
+    public function closeVirtualAccount($virtualAccountId)
     {
-        $curl = curl_init('https://api.razorpay.com/v1/virtual_accounts/' . $virtualAccountId . '/close');
+        $curl = curl_init(config('razorpay.url') . 'virtual_accounts/' . $virtualAccountId . '/close');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
         $result = curl_exec($curl);
@@ -427,33 +489,36 @@ class RazorpayHelper
      * @param $data
      * @return mixed
      */
-    public function bankPayout($data)
+    public function createBankPayout($data)
     {
+        $bankAccount['name'] = $data['name'];
+        $bankAccount['ifsc'] = $data['bankIfscNo'];
+        $bankAccount['account_number'] = $data['bankAcctNo'];
+
+        $contact['name'] = $data['name'];
+        $contact['email'] = $data['email'];
+        $contact['contact'] = $data['mobile'];
+
+        $fundAccount['account_type'] = 'bank_account';
+        $fundAccount['bank_account'] = $bankAccount;
+        $fundAccount['contact'] = $contact;
+
+        $requestData['account_number'] = config('razorpay.account');
+        $requestData['amount'] = $data['amount'];
+        $requestData['currency'] = 'INR';
+        $requestData['mode'] = $data['paymentMode'] ?? 'NEFT';
+        $requestData['purpose'] = $data['paymentPurpose'] ?? 'payout';
+        $requestData['fund_account'] = $fundAccount;
+        $requestData['queue_if_low_balance'] = true;
+        $requestData['reference_id'] = $data['referenceId'] ?? '';
+        $requestData['narration'] = $data['narration'] ?? '';
+        $requestData['notes'] = $data['notes'] ?? json_decode('{}');
+
         $curl = curl_init(config('razorpay.url') . 'payouts');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data, false));
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
-        $result = curl_exec($curl);
-        curl_close($curl);
-
-        return json_decode($result, true);
-    }
-
-    /**
-     * This function is used to create payout to credit, debit or prepaid card
-     *
-     * @param $data
-     * @return mixed
-     */
-    public function cardPayout($data)
-    {
-        $curl = curl_init(config('razorpay.url') . 'payouts');
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data, false));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($requestData, false));
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
         $result = curl_exec($curl);
         curl_close($curl);
@@ -466,13 +531,34 @@ class RazorpayHelper
      * @param $data
      * @return mixed
      */
-    public function upiPayout($data)
+    public function createUpiPayout($data)
     {
+        $vpa['address'] = $data['vpaAddress'];
+
+        $contact['name'] = $data['name'];
+        $contact['email'] = $data['email'];
+        $contact['contact'] = $data['mobile'];
+
+        $fundAccount['account_type'] = 'vpa';
+        $fundAccount['vpa'] = $vpa;
+        $fundAccount['contact'] = $contact;
+
+        $requestData['account_number'] = config('razorpay.account');
+        $requestData['amount'] = $data['amount'];
+        $requestData['currency'] = 'INR';
+        $requestData['mode'] = 'UPI';
+        $requestData['purpose'] = $data['paymentPurpose'] ?? 'payout';
+        $requestData['fund_account'] = $fundAccount;
+        $requestData['queue_if_low_balance'] = true;
+        $requestData['reference_id'] = $data['referenceId'] ?? '';
+        $requestData['narration'] = $data['narration'] ?? '';
+        $requestData['notes'] = $data['notes'] ?? json_decode('{}');
+
         $curl = curl_init(config('razorpay.url') . 'payouts');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data, false));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($requestData, false));
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
         $result = curl_exec($curl);
         curl_close($curl);
@@ -485,18 +571,64 @@ class RazorpayHelper
      * @param $data
      * @return mixed
      */
-    public function amazonPayout($data)
+    public function createAmazonWalletPayout($data)
     {
+        $wallet['provider'] = 'amazonpay';
+        $wallet['name'] = $data['name'];
+        $wallet['email'] = $data['email'];
+        $wallet['phone'] = $data['mobile'];
+
+        $contact['name'] = $data['name'];
+        $contact['email'] = $data['email'];
+        $contact['contact'] = $data['mobile'];
+
+        $fundAccount['account_type'] = 'wallet';
+        $fundAccount['wallet'] = $wallet;
+        $fundAccount['contact'] = $contact;
+
+        $requestData['account_number'] = config('razorpay.account');
+        $requestData['amount'] = $data['amount'];
+        $requestData['currency'] = 'INR';
+        $requestData['mode'] = 'amazonpay';
+        $requestData['purpose'] = $data['paymentPurpose'] ?? 'payout';
+        $requestData['fund_account'] = $fundAccount;
+        $requestData['queue_if_low_balance'] = true;
+        $requestData['reference_id'] = $data['referenceId'] ?? '';
+        $requestData['narration'] = $data['narration'] ?? '';
+        $requestData['notes'] = $data['notes'] ?? json_decode('{}');
+
         $curl = curl_init(config('razorpay.url') . 'payouts');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data, false));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($requestData, false));
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
         $result = curl_exec($curl);
         curl_close($curl);
 
         return json_decode($result, true);
+    }
+
+    /**
+     * This function is used to get list of all payouts transactions
+     *
+     * @return mixed
+     */
+    public function allPayoutTransactions()
+    {
+        $curl = curl_init(config('razorpay.url') . 'transactions?account_number=' . config('razorpay.account'));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+        $result = curl_exec($curl);
+        curl_close($curl);
+
+        $result = json_decode($result, true);
+
+        $transactions = $result['items'];
+
+        return $transactions;
     }
 
     /**
@@ -505,13 +637,28 @@ class RazorpayHelper
      * @param $data
      * @return mixed
      */
-    public function payoutLink($data)
+    public function createPayoutLink($data)
     {
-        $curl = curl_init(config('razorpay.url') . 'payouts');
+        $contact['name'] = $data['name'];
+        $contact['email'] = $data['email'];
+        $contact['contact'] = $data['mobile'];
+
+        $requestData['account_number'] = config('razorpay.account');
+        $requestData['contact'] = $contact;
+        $requestData['amount'] = $data['amount'];
+        $requestData['currency'] = 'INR';
+        $requestData['purpose'] = $data['paymentPurpose'] ?? 'payout';
+        $requestData['description'] = $data['description'] ?? '';
+        $requestData['receipt'] = $data['receipt'] ?? '';
+        $requestData['send_sms'] = true;
+        $requestData['send_email'] = true;
+        $requestData['notes'] = $data['notes'] ?? json_decode('{}');
+
+        $curl = curl_init(config('razorpay.url') . 'payout-links');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data, false));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($requestData, false));
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
         $result = curl_exec($curl);
         curl_close($curl);
@@ -520,13 +667,36 @@ class RazorpayHelper
     }
 
     /**
-     * This function is used to get list of all payouts
+     * This function is used to get list of all payout links
      *
      * @return mixed
      */
-    public function allPayoutTransactions()
+    public function allPayoutLinks()
     {
-        $curl = curl_init('https://api.razorpay.com/v1/transactions?account_number=' . config('razorpay.account'));
+        $curl = curl_init(config('razorpay.url') . 'payout-links');
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+        $result = curl_exec($curl);
+        curl_close($curl);
+
+        $result = json_decode($result, true);
+
+        $links = $result['items'];
+
+        return $links;
+    }
+
+    /**
+     * This function is used to get payout link details
+     *
+     * @param $payoutLinkId
+     * @return mixed
+     */
+    public function fetchPayoutLink($payoutLinkId)
+    {
+        $curl = curl_init(config('razorpay.url') . 'payout-links/' . $payoutLinkId);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -538,75 +708,17 @@ class RazorpayHelper
     }
 
     /**
-     * This function is used to get list of all disputes
+     * This function is used to cancel payout link
      *
+     * @param $payoutLinkId
      * @return mixed
      */
-    public function allDisputes()
+    public function cancelPayoutLink($payoutLinkId)
     {
-        $curl = curl_init('https://api.razorpay.com/v1/disputes');
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
-        $result = curl_exec($curl);
-        curl_close($curl);
-
-        return json_decode($result, true);
-    }
-
-    /**
-     * This function is used to get dispute details
-     *
-     * @param $disputeId
-     * @return mixed
-     */
-    public function fetchDispute($disputeId)
-    {
-        $curl = curl_init('https://api.razorpay.com/v1/disputes/' . $disputeId);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
-        $result = curl_exec($curl);
-        curl_close($curl);
-
-        return json_decode($result, true);
-    }
-
-    /**
-     * This function is used to accept a dispute against the payment
-     *
-     * @param $disputeId
-     * @return mixed
-     */
-    public function acceptDispute($disputeId)
-    {
-        $curl = curl_init(config('razorpay.url') . 'disputes/'.$disputeId.'/accept');
+        $curl = curl_init(config('razorpay.url') . 'payout-links/' . $payoutLinkId . '/cancel');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
-        $result = curl_exec($curl);
-        curl_close($curl);
-
-        return json_decode($result, true);
-    }
-
-    /**
-     * This function is used to contest dispute with explanations and supporting documents to submit evidences
-     *
-     * @param $disputeId
-     * @param $data
-     * @return mixed
-     */
-    public function contestDispute($disputeId,$data)
-    {
-        $curl = curl_init(config('razorpay.url') . 'disputes/'.$disputeId.'/contest');
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $this->authorization));
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PATCH');
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data, false));
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
         $result = curl_exec($curl);
         curl_close($curl);

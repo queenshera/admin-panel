@@ -9,7 +9,7 @@ namespace Queenshera\AdminPanel\Helpers;
 class Msg91Helper
 {
     /**
-     * This function is used to send message
+     * This function is used to send message to any mobile number/s
      *
      * @param $templateId
      * @param $mobiles
@@ -65,7 +65,7 @@ class Msg91Helper
     }
 
     /**
-     * This function is used to resend otp on given mmobile number
+     * This function is used to resend otp on given mobile number
      *
      * @param $mobile
      * @param $type

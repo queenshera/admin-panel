@@ -114,13 +114,13 @@ class AppHelper
      * This function is used to upload file to local storage
      *
      * @param $file
-     * @param $storagePath
+     * @param $fileNamePath
      * @return string
      */
-    public function uploadFileToLocal($file, $storagePath)
+    public function uploadFileToLocal($file, $fileNamePath)
     {
-        Storage::put('public/' . $storagePath, file_get_contents($file));
-        $filePath = config('app.url') . '/storage/' . $storagePath;
+        Storage::put('public/' . $fileNamePath, file_get_contents($file));
+        $filePath = config('app.url') . '/storage/' . $fileNamePath;
 
         return $filePath;
     }
@@ -129,13 +129,13 @@ class AppHelper
      * This function is used to upload file to local storage
      *
      * @param $file
-     * @param $storagePath
+     * @param $fileNamePath
      * @return string
      */
-    public function uploadFileToS3($file, $storagePath)
+    public function uploadFileToS3($file, $fileNamePath)
     {
-        Storage::disk('s3')->put($storagePath, file_get_contents($file));
-        $filePath = config('filesystems.disks.s3.url') . $storagePath;
+        Storage::disk('s3')->put($fileNamePath, file_get_contents($file));
+        $filePath = config('filesystems.disks.s3.url') . $fileNamePath;
 
         return $filePath;
     }

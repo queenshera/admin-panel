@@ -62,6 +62,46 @@ class TextlocalHelper
     }
 
     /**
+     * This function is used to get list of scheduled messages
+     *
+     * @return mixed
+     */
+    public function getScheduledMessages()
+    {
+        $data['apikey'] = config('textlocal.key');
+
+        $ch = curl_init(config('textlocal.url') . 'get_scheduled');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response);
+    }
+
+    /**
+     * This function is used to cancel scheduled message
+     *
+     * @param $messageId
+     * @return mixed
+     */
+    public function cancelScheduledMessages($messageId)
+    {
+        $data['apikey'] = config('textlocal.key');
+        $data['sent_id'] = $messageId;
+
+        $ch = curl_init(config('textlocal.url') . 'cancel_scheduled');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response);
+    }
+
+    /**
      * This function is used to check balance remaining in account
      *
      * @return mixed
@@ -109,46 +149,6 @@ class TextlocalHelper
         $data['apikey'] = config('textlocal.key');
 
         $ch = curl_init(config('textlocal.url') . 'get_sender_names');
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        return json_decode($response);
-    }
-
-    /**
-     * This function is used to get list of scheduled messages
-     *
-     * @return mixed
-     */
-    public function getScheduledMessages()
-    {
-        $data['apikey'] = config('textlocal.key');
-
-        $ch = curl_init(config('textlocal.url') . 'get_scheduled');
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        return json_decode($response);
-    }
-
-    /**
-     * This function is used to cancel scheduled message
-     *
-     * @param $messageId
-     * @return mixed
-     */
-    public function cancelScheduledMessages($messageId)
-    {
-        $data['apikey'] = config('textlocal.key');
-        $data['sent_id'] = $messageId;
-
-        $ch = curl_init(config('textlocal.url') . 'cancel_scheduled');
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

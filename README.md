@@ -39,15 +39,15 @@ composer require queenshera/admin-panel
 - 
 
 ## Available Services in this package
-- Debugbar (tested)
-- DomPDF (tested)
-- Livewire (tested)
-- AWS S3 (tested)
+- [Debugbar](https://github.com/barryvdh/laravel-debugbar/blob/master/readme.md)
+- [DomPDF](https://github.com/barryvdh/laravel-dompdf/blob/master/readme.md)
+- [Livewire](https://laravel-livewire.com/docs/quickstart)
+- [AWS S3](https://github.com/queenshera/laravel-admin-panel/blob/dev/FileUpload.md)
 - Firebase (not tested yet)
-- PestPHP (tested)
-- Textlocal SMS service (tested)
-- MSG91 SMS service (tested)
-- Razorpay payment gateway (tested, but need to update)
+- [PestPHP](https://pestphp.com/docs/)
+- [Textlocal](https://github.com/queenshera/laravel-admin-panel/blob/dev/TextLocal.md) SMS service
+- [MSG91](https://github.com/queenshera/laravel-admin-panel/blob/dev/MSG91.md) SMS service
+- [Razorpay](https://github.com/queenshera/laravel-admin-panel/blob/dev/Razorpay.md) payment gateway service
 - 
 
 ## Development
