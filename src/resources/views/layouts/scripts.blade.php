@@ -3,7 +3,7 @@
 <script src="{{'https://cdn.queensherainfotech.com/panel/plugins/bootstrap/js/bootstrap.bundle.min.js'}}"></script>
 <script src="{{'https://cdn.queensherainfotech.com/panel/plugins/moment/moment.min.js'}}"></script>
 <script src="{{asset('vendor/adminPanel/plugins/fullcalendar/main.js')}}"></script>
-<script src="{{'https://cdn.queensherainfotech.com/panel/plugins/inputmask/min/jquery.inputmask.bundle.min.js'}}"></script>
+<script src="{{'https://cdn.queensherainfotech.com/panel/plugins/inputmask/inputmask.min.js'}}"></script>
 <script src="{{'https://cdn.queensherainfotech.com/panel/plugins/daterangepicker/daterangepicker.js'}}"></script>
 <script src="{{'https://cdn.queensherainfotech.com/panel/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js'}}"></script>
 <script src="{{'https://cdn.queensherainfotech.com/panel/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js'}}"></script>

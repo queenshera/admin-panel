@@ -41,6 +41,9 @@ class InstallCommand extends Command
         $this->installFirebase();
         $this->installPest();
 
+        // copy firebase adminsdk
+        (new Filesystem())->copyDirectory(__DIR__ . '/../../stubs/app/Firebase', app_path('Http/Firebase'));
+
         // copy controller files
         (new Filesystem())->copyDirectory(__DIR__ . '/../Http/Controllers', app_path('Http/Controllers'));
 
