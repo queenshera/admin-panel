@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('fcmToken')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
