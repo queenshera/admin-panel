@@ -19,4 +19,8 @@
 <script src="{{asset('vendor/adminPanel/plugins/summernote/summernote-bs4.min.js')}}"></script>
 <script src="{{'https://cdn.queensherainfotech.com/panel/plugins/chart.js/Chart.min.js'}}"></script>
 
-
+<script>
+    $(function () {
+        bsCustomFileInput.init();
+    });
+</script>

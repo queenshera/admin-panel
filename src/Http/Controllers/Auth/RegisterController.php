@@ -7,6 +7,7 @@ use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -70,13 +71,20 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'mobile' => $data['mobile'],
             'password' => Hash::make($data['password']),
-            'photo' => 'https://ui-avatars.com/api/?name=' . substr($data['name'], 0, 1) . '&color=7F9CF5&background=EBF4FF',
             'role' => 'user'
         ]);
     }
 
     public function redirectPath()
     {
+        $names = explode(" ", auth()->user()->name);
+        $photoName = '';
+        foreach ($names as $name) {
+            $photoName .= substr($name, 0, 1);
+        }
+        $photoName = 'https://ui-avatars.com/api/?name=' . $photoName . '&color=7F9CF5&background=EBF4FF';
+        Session::put('photo',$photoName);
+
         if (method_exists($this, 'redirectTo')) {
             return $this->redirectTo();
         }

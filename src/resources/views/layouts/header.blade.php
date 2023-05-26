@@ -12,7 +12,7 @@
 
         <li class="nav-item dropdown user-menu">
             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                <img src="{{auth()->user()->photo}}" class="user-image img-circle elevation-2" alt="User Image">
+                <img src="{{auth()->user()->photo??\Illuminate\Support\Facades\Session::get('photo')}}" class="user-image img-circle elevation-2" alt="User Image">
                 <span class="d-none d-md-inline">{{auth()->user()->name}}</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
@@ -25,7 +25,7 @@
                     </p>
                 </li>
                 <li class="user-footer">
-                    <a href="{{route('profile',['redirect'=>\Illuminate\Support\Facades\URL::current()])}}" class="btn btn-default btn-flat">Profile</a>
+                    <a href="{{route('profile')}}" class="btn btn-default btn-flat">Profile</a>
                     <a href="{{route('logout')}}" class="btn btn-default btn-flat float-right">
                         Sign out
                     </a>

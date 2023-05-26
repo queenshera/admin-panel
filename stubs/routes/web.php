@@ -13,13 +13,12 @@ Auth::routes([
     'login' => true,
     'register' => true,
     'reset' => true,
-    'verify' => true
+    'verify' => false,
 ]);
 
-Route::group(['middleware' => ['disableMoveBack', 'auth', 'verified']], function () {
+Route::group(['middleware' => ['disableMoveBack', 'auth']], function () {
     Route::get('/home', [\App\Http\Controllers\HomeController::class, 'home'])->name('home');
     Route::get('/profile', [\App\Http\Controllers\HomeController::class, 'profile'])->name('profile');
-    Route::post('/profile/update', [\App\Http\Controllers\HomeController::class, 'profileUpdate'])->name('profile.update');
 });
 
 Route::get('/logout', [\App\Http\Controllers\HomeController::class, 'logout'])->name('logout');

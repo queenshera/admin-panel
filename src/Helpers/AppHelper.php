@@ -10,7 +10,6 @@ use NumberFormatter;
 /**
  * This class is used to execute multiple times used general functions
  */
-
 class AppHelper
 {
     /**
@@ -21,7 +20,7 @@ class AppHelper
      * @param $decimals
      * @return string
      */
-    public function retfloat($number,$decimals=2)
+    public function retfloat($number, $decimals = 2)
     {
         return number_format((float)$number, $decimals, '.', '');
     }
@@ -69,9 +68,9 @@ class AppHelper
      * @param $length
      * @return int
      */
-    public function randomDigits($length=6)
+    public function randomDigits($length = 6)
     {
-        return rand(pow(10, $length-1), pow(10, $length)-1);
+        return rand(pow(10, $length - 1), pow(10, $length) - 1);
     }
 
     /**
@@ -100,10 +99,9 @@ class AppHelper
     public function getMonthListFromToDate(Carbon $startDate, Carbon $endDate)
     {
         $startDate = $startDate->startOfMonth();
-        $endDate   = $endDate->startOfMonth();
+        $endDate = $endDate->startOfMonth();
 
-        do
-        {
+        do {
             $months[] = $startDate->format('F Y');
         } while ($startDate->addMonth() < $endDate);
 
@@ -111,33 +109,41 @@ class AppHelper
     }
 
     /**
-     * This function is used to upload file to local storage
+     * This function is used to upload file to storage depending on value of aws enablement status
      *
      * @param $file
      * @param $fileNamePath
      * @return string
      */
-    public function uploadFileToLocal($file, $fileNamePath)
+    public function uploadFileToStorage($file, $fileNamePath)
     {
+        if (config('filesystems.disks.s3.enabled')) {
+            Storage::disk('s3')->put($fileNamePath, file_get_contents($file));
+            $filePath = config('filesystems.disks.s3.url') . $fileNamePath;
+            return $filePath;
+        }
+
         Storage::put('public/' . $fileNamePath, file_get_contents($file));
         $filePath = config('app.url') . '/storage/' . $fileNamePath;
-
         return $filePath;
     }
 
     /**
-     * This function is used to upload file to local storage
+     * This function is used to upload file to storage depending on value of aws enabled status
      *
      * @param $file
      * @param $fileNamePath
      * @return string
      */
-    public function uploadFileToS3($file, $fileNamePath)
+    public function livewireFileUpload($file, $fileNamePath)
     {
-        Storage::disk('s3')->put($fileNamePath, file_get_contents($file));
-        $filePath = config('filesystems.disks.s3.url') . $fileNamePath;
+        if (config('filesystems.disks.s3.enabled')) {
+            $file->storeAs('', $fileNamePath, 's3');
+            return config('filesystems.disks.s3.url') . $fileNamePath;
+        }
 
-        return $filePath;
+        $file->storePubliclyAs('public', $fileNamePath);
+        return config('app.url') . '/storage/' . $fileNamePath;
     }
 
 }

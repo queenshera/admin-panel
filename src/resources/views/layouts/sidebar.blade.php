@@ -7,10 +7,10 @@
     <div class="sidebar">
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="{{auth()->user()->photo}}" class="img-circle elevation-2 text-white-50" alt="Photo">
+                <img src="{{auth()->user()->photo??\Illuminate\Support\Facades\Session::get('photo')}}" class="img-circle elevation-2 text-white-50" alt="Photo">
             </div>
             <div class="info">
-                <a href="{{route('profile',['redirect'=>\Illuminate\Support\Facades\URL::current()])}}" class="d-block">{{auth()->user()->name}}</a>
+                <a href="{{route('profile')}}" class="d-block">{{auth()->user()->name}}</a>
             </div>
         </div>
 

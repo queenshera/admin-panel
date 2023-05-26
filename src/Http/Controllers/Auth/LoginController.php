@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
@@ -23,6 +24,14 @@ class LoginController extends Controller
 
     public function redirectPath()
     {
+        $names = explode(" ", auth()->user()->name);
+        $photoName = '';
+        foreach ($names as $name) {
+            $photoName .= substr($name, 0, 1);
+        }
+        $photoName = 'https://ui-avatars.com/api/?name=' . $photoName . '&color=7F9CF5&background=EBF4FF';
+        Session::put('photo',$photoName);
+
         if (method_exists($this, 'redirectTo')) {
             return $this->redirectTo();
         }

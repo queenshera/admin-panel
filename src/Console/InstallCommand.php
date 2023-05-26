@@ -19,10 +19,13 @@ class InstallCommand extends Command
     public function handle()
     {
         // install other packages
-        if (!$this->requireComposerPackages('illuminate/support')) {
+        /*if (!$this->requireComposerPackages('illuminate/support')) {
             return 1;
         }
         if (!$this->requireComposerPackages('illuminate/console')) {
+            return 1;
+        }
+        if (!$this->requireComposerPackages('jenssegers/agent')) {
             return 1;
         }
         if (!$this->requireComposerPackages('barryvdh/laravel-debugbar')) {
@@ -39,7 +42,7 @@ class InstallCommand extends Command
         }
         $this->installS3();
         $this->installFirebase();
-        $this->installPest();
+        $this->installPest();*/
 
         // copy firebase adminsdk
         (new Filesystem())->copyDirectory(__DIR__ . '/../../stubs/app/Firebase', app_path('Http/Firebase'));
@@ -47,15 +50,15 @@ class InstallCommand extends Command
         // copy controller files
         (new Filesystem())->copyDirectory(__DIR__ . '/../Http/Controllers', app_path('Http/Controllers'));
 
+        // copy livewire files
+        (new Filesystem())->copyDirectory(__DIR__ . '/../Http/Livewire', app_path('Http/Livewire'));
+
         // copy middleware files
         (new Filesystem())->copyDirectory(__DIR__ . '/../Http/Middleware', app_path('Http/Middleware'));
         copy(__DIR__ . '/../Http/Kernel.php', app_path('Http/Kernel.php'));
 
         // copy model files
         copy(__DIR__ . '/../../stubs/app/Models/User.php', app_path('Models/User.php'));
-
-        // copy rule files
-        (new Filesystem())->copyDirectory(__DIR__ . '/../../stubs/app/Rules', app_path('Rules'));
 
         // copy config files
         (new Filesystem())->copyDirectory(__DIR__ . '/../../stubs/config', config_path(''));
@@ -67,11 +70,10 @@ class InstallCommand extends Command
         (new Filesystem())->copyDirectory(__DIR__ . '/../resources/views', resource_path('views'));
 
         // copy database files
-        copy(__DIR__ . '/../database/migrations/2014_10_12_000000_create_users_table.php', database_path('migrations/2014_10_12_000000_create_users_table.php'));
+        (new Filesystem())->copyDirectory(__DIR__ . '/../../stubs/database/migrations', database_path('migrations'));
 
-        // copy database files
-        copy(__DIR__ . '/../routes/web.php', base_path('routes/web.php'));
-        copy(__DIR__ . '/../routes/api.php', base_path('routes/api.php'));
+        // copy route files
+        (new Filesystem())->copyDirectory(__DIR__ . '/../../stubs/routes', base_path('routes'));
 
         // link storage
         $this->runCommands(['php artisan storage:link']);
