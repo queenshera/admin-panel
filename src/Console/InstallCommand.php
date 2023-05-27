@@ -40,6 +40,12 @@ class InstallCommand extends Command
         if (!$this->requireComposerPackages('livewire/livewire')) {
             return 1;
         }
+        if (!$this->requireComposerPackages('pragmarx/google2fa-laravel')) {
+            return 1;
+        }
+        if (!$this->requireComposerPackages('bacon/bacon-qr-code')) {
+            return 1;
+        }
         $this->installS3();
         $this->installFirebase();
         $this->installPest();*/

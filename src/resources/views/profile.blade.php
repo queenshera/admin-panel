@@ -25,6 +25,8 @@
 
     @livewire('update-user-password')
 
+    @livewire('two-factor-authentication')
+
     @livewire('logout-other-browser-sessions')
 @endsection
 
@@ -54,6 +56,14 @@
 
         window.livewire.on('otherBrowserSessionsRemoved', () => {
             $('#modal-default').modal('hide');
+        });
+
+        window.livewire.on('confirmingTwoFactorAuthentication', () => {
+            $('#modal-two-fa-confirm').modal('show');
+        });
+
+        window.livewire.on('twoFactorAuthenticationPasswordConfirmed', () => {
+            $('#modal-two-fa-confirm').modal('hide');
         });
 
         window.livewire.on('passwordUpdated', () => {
