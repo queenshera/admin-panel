@@ -15,6 +15,8 @@ Auth::routes([
     'reset' => true,
     'verify' => false,
 ]);
+Route::get('/two-factor-challenge',[\App\Http\Controllers\Auth\LoginController::class,'twoFactorChallenge'])->name('two-factor-challenge');
+Route::post('/login/2fa',[\App\Http\Controllers\Auth\LoginController::class,'attempt2fa'])->name('login.2fa');
 
 Route::group(['middleware' => ['disableMoveBack', 'auth']], function () {
     Route::get('/home', [\App\Http\Controllers\HomeController::class, 'home'])->name('home');
