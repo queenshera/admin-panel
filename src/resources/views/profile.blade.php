@@ -28,6 +28,8 @@
     @livewire('two-factor-authentication')
 
     @livewire('logout-other-browser-sessions')
+
+    @livewire('delete-account')
 @endsection
 
 @section('custom-scripts')
@@ -52,6 +54,10 @@
 
         window.livewire.on('confirmingLogout', () => {
             $('#modal-default').modal('show');
+        });
+
+        window.livewire.on('confirmingDeletion', () => {
+            $('#modal-account-deletion').modal('show');
         });
 
         window.livewire.on('otherBrowserSessionsRemoved', () => {

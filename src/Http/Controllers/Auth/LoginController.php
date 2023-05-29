@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use App\Rules\CheckDeletedUser;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -62,7 +63,11 @@ class LoginController extends Controller
     protected function validateLogin(Request $request)
     {
         $request->validate([
-            'email' => ['required', 'string', 'exists:users'],
+            'email' => ['required', 'string', 'exists:users', function ($attribute, $value, $fail) use ($request) {
+                if (!User::where('email', $request->email)->first()) {
+                    return $fail('User is not active currently. Please contact support team for further details.');
+                }
+            }],
             'password' => ['required', 'string'],
         ], [
             'email.exists' => 'User with given email does not exists.'
