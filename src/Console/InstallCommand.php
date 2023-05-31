@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use RuntimeException;
 use Symfony\Component\Process\Process;
+use function Pest\Laravel\json;
 
 class InstallCommand extends Command
 {
@@ -18,40 +19,87 @@ class InstallCommand extends Command
      */
     public function handle()
     {
-        // install other packages
-        /*if (!$this->requireComposerPackages('illuminate/support')) {
-            return 1;
-        }
-        if (!$this->requireComposerPackages('illuminate/console')) {
-            return 1;
-        }
-        if (!$this->requireComposerPackages('jenssegers/agent')) {
-            return 1;
-        }
-        if (!$this->requireComposerPackages('barryvdh/laravel-debugbar')) {
-            return 1;
-        }
-        if (!$this->requireComposerPackages('barryvdh/laravel-dompdf')) {
-            return 1;
-        }
-        if (!$this->requireComposerPackages('laravel/ui')) {
-            return 1;
-        }
-        if (!$this->requireComposerPackages('livewire/livewire')) {
-            return 1;
-        }
-        if (!$this->requireComposerPackages('pragmarx/google2fa-laravel')) {
-            return 1;
-        }
-        if (!$this->requireComposerPackages('bacon/bacon-qr-code')) {
-            return 1;
-        }
-        $this->installS3();
-        $this->installFirebase();
-        $this->installPest();*/
+        $this->info("Do you want to install packages? Your code will not work properly if you don't have packages installed.");
+        $packages = $this->choice('Select none, single or multiple packages seperated by comma that you want to install', ['All', 'Debugbar', 'DomPDF', 'AWS S3 Storage', 'Pest Tests', 'Firebase', 'None'], 0, null, true);
 
-        // copy firebase adminsdk
-        (new Filesystem())->copyDirectory(__DIR__ . '/../../stubs/app/Firebase', app_path('Http/Firebase'));
+        if (!in_array('None', $packages)) {
+
+            // install other packages
+            if (!$this->requireComposerPackages('illuminate/support')) {
+                return 1;
+            }
+            if (!$this->requireComposerPackages('illuminate/console')) {
+                return 1;
+            }
+            if (!$this->requireComposerPackages('laravel/ui')) {
+                return 1;
+            }
+            if (!$this->requireComposerPackages('livewire/livewire')) {
+                return 1;
+            }
+            if (!$this->requireComposerPackages('jenssegers/agent')) {
+                return 1;
+            }
+            if (!$this->requireComposerPackages('pragmarx/google2fa-laravel')) {
+                return 1;
+            }
+            if (!$this->requireComposerPackages('bacon/bacon-qr-code')) {
+                return 1;
+            }
+
+            if (in_array('All', $packages) || in_array('Debugbar', $packages)) {
+                if (!$this->requireComposerPackages('barryvdh/laravel-debugbar')) {
+                    return 1;
+                }
+            }
+
+            if (in_array('All', $packages) || in_array('DomPDF', $packages)) {
+                if (!$this->requireComposerPackages('barryvdh/laravel-dompdf')) {
+                    return 1;
+                }
+            }
+
+            if (in_array('All', $packages) || in_array('AWS S3 Storage', $packages)) {
+                if (!$this->requireComposerPackages('league/flysystem-aws-s3-v3')) {
+                    return 1;
+                }
+            }
+
+            if (in_array('All', $packages) || in_array('Pest Tests', $packages)) {
+                if (!$this->requireComposerDevPackages('pestphp/pest')) {
+                    return 1;
+                }
+                if (!$this->requireComposerDevPackages('pestphp/pest-plugin-laravel')) {
+                    return 1;
+                }
+                copy(__DIR__ . '/../../stubs/pest-tests/Pest.php', base_path('tests/Pest.php'));
+                copy(__DIR__ . '/../../stubs/pest-tests/Feature/ExampleTest.php', base_path('tests/Feature/ExampleTest.php'));
+                copy(__DIR__ . '/../../stubs/pest-tests/Unit/ExampleUnitTest.php', base_path('tests/Unit/ExampleTest.php'));
+            }
+
+            if (in_array('All', $packages) || in_array('Firebase', $packages)) {
+                if (!$this->requireComposerPackages('kreait/laravel-firebase')) {
+                    return 1;
+                }
+
+                // copy firebase adminsdk file
+                (new Filesystem())->copyDirectory(__DIR__ . '/../../stubs/app/Firebase', app_path('Http/Firebase'));
+            }
+        }
+
+        copy(__DIR__ . '/../../stubs/config/app.php', config_path('app.php'));
+        copy(__DIR__ . '/../../stubs/config/filesystems.php', config_path('filesystems.php'));
+        copy(__DIR__ . '/../../stubs/config/msg91.php', config_path('msg91.php'));
+        copy(__DIR__ . '/../../stubs/config/razorpay.php', config_path('razorpay.php'));
+        copy(__DIR__ . '/../../stubs/config/textlocal.php', config_path('textlocal.php'));
+
+        if (in_array('All', $packages) || in_array('Debugbar', $packages)) {
+            copy(__DIR__ . '/../../stubs/config/debugbar.php', config_path('debugbar.php'));
+        }
+
+        if (in_array('All', $packages) || in_array('DomPDF', $packages)) {
+            copy(__DIR__ . '/../../stubs/config/dompdf.php', config_path('dompdf.php'));
+        }
 
         // copy controller files
         (new Filesystem())->copyDirectory(__DIR__ . '/../Http/Controllers', app_path('Http/Controllers'));
@@ -66,9 +114,6 @@ class InstallCommand extends Command
         // copy model files
         copy(__DIR__ . '/../../stubs/app/Models/User.php', app_path('Models/User.php'));
 
-        // copy config files
-        (new Filesystem())->copyDirectory(__DIR__ . '/../../stubs/config', config_path(''));
-
         // copy public assets
         (new Filesystem())->copyDirectory(__DIR__ . '/../../stubs/public/panel', public_path('vendor/adminPanel'));
 
@@ -81,49 +126,14 @@ class InstallCommand extends Command
         // copy route files
         (new Filesystem())->copyDirectory(__DIR__ . '/../../stubs/routes', base_path('routes'));
 
-        // link storage
-        $this->runCommands(['php artisan storage:link']);
+        if ($this->confirm("Do you want to local storage link?")) {
+            // link storage
+            $this->runCommands(['php artisan storage:link']);
+        }
 
         // copy env file details
         copy(__DIR__ . '/../../.env.example', base_path('.env.example'));
-        copy(__DIR__ . '/../../.env.example', base_path('.env'));
-        $this->runCommands(['php artisan config:cache', 'php artisan key:generate', 'php artisan config:cache']);
-    }
-
-    /**
-     * @return int|void
-     */
-    protected function installS3()
-    {
-        if (!$this->requireComposerPackages('league/flysystem-aws-s3-v3')) {
-            return 1;
-        }
-    }
-
-    /**
-     * @return int|void
-     */
-    protected function installFirebase()
-    {
-        if (!$this->requireComposerPackages('kreait/laravel-firebase')) {
-            return 1;
-        }
-    }
-
-    /**
-     * @return int|void
-     */
-    protected function installPest()
-    {
-        if (!$this->requireComposerDevPackages('pestphp/pest')) {
-            return 1;
-        }
-        if (!$this->requireComposerDevPackages('pestphp/pest-plugin-laravel')) {
-            return 1;
-        }
-        copy(__DIR__ . '/../../stubs/pest-tests/Pest.php', base_path('tests/Pest.php'));
-        copy(__DIR__ . '/../../stubs/pest-tests/Feature/ExampleTest.php', base_path('tests/Feature/ExampleTest.php'));
-        copy(__DIR__ . '/../../stubs/pest-tests/Unit/ExampleUnitTest.php', base_path('tests/Unit/ExampleTest.php'));
+        $this->runCommands(['php artisan config:cache']);
     }
 
     /**
