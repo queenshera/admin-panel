@@ -10,7 +10,7 @@ use Kreait\Firebase\RemoteConfig;
  */
 class FirebaseRemoteConfigHelper
 {
-    private function remoteConfig()
+    private static function configure()
     {
         $factory = (new \Kreait\Firebase\Factory)->withServiceAccount(app_path() . '/Http/Firebase/adminsdk.json');
         $auth = $factory->createRemoteConfig();
@@ -24,9 +24,9 @@ class FirebaseRemoteConfigHelper
      * @return RemoteConfig\Parameter[]
      * @throws RemoteConfigException
      */
-    public function getConfigValues()
+    public static function getConfigValues()
     {
-        $parameters = $this->remoteConfig()->get()->parameters();
+        $parameters = FirebaseRemoteConfigHelper::configure()->get()->parameters();
 
         $configParams = [];
         foreach ($parameters as $param) {
@@ -46,9 +46,9 @@ class FirebaseRemoteConfigHelper
      * @return string
      * @throws RemoteConfigException
      */
-    public function createConfigValues($configParameters)
+    public static function createConfigValues($configParameters)
     {
-        $oldParameters = $this->remoteConfig()->get()->parameters();
+        $oldParameters = FirebaseRemoteConfigHelper::configure()->get()->parameters();
 
         $configParams = [];
         foreach ($oldParameters as $param) {
@@ -71,7 +71,7 @@ class FirebaseRemoteConfigHelper
         }
 
         try {
-            return $this->remoteConfig()->publish($template);
+            return FirebaseRemoteConfigHelper::configure()->publish($template);
         } catch (RemoteConfigException $e) {
             return $e->getMessage();
         }
@@ -84,9 +84,9 @@ class FirebaseRemoteConfigHelper
      * @return string
      * @throws RemoteConfigException
      */
-    public function removeConfigValues($configElements)
+    public static function removeConfigValues($configElements)
     {
-        $oldParameters = $this->remoteConfig()->get()->parameters();
+        $oldParameters = FirebaseRemoteConfigHelper::configure()->get()->parameters();
 
         $configParams = [];
         foreach ($oldParameters as $param) {
@@ -111,7 +111,7 @@ class FirebaseRemoteConfigHelper
         }
 
         try {
-            return $this->remoteConfig()->publish($template);
+            return FirebaseRemoteConfigHelper::configure()->publish($template);
         } catch (RemoteConfigException $e) {
             return $e->getMessage();
         }

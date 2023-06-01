@@ -16,7 +16,7 @@ class Msg91Helper
      * @param $messageData
      * @return mixed
      */
-    public function sendMessage($templateId, $mobiles, $messageData)
+    public static function sendMessage($templateId, $mobiles, $messageData)
     {
         $data['template_id'] = $templateId;
         $data['sender'] = config('msg91.sender');
@@ -45,7 +45,7 @@ class Msg91Helper
      * @param $otp
      * @return mixed
      */
-    public function sendOtp($templateId, $mobile, $otpLength = 4, $otp = null)
+    public static function sendOtp($templateId, $mobile, $otpLength = 4, $otp = null)
     {
         $data['template_id'] = $templateId;
         $data['sender'] = config('msg91.sender');
@@ -72,7 +72,7 @@ class Msg91Helper
      * @return mixed
      */
 
-    public function resendOtp($mobile, $type = 'text')
+    public static function resendOtp($mobile, $type = 'text')
     {
         $ch = curl_init(config('msg91.url') . 'otp/retry?mobile=' . $mobile . '&retrytype=' . $type);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('accept:application/json', 'authkey:' . config('msg91.key'), 'content-type:application/json'));
@@ -90,7 +90,7 @@ class Msg91Helper
      * @param $otp
      * @return mixed
      */
-    public function verifyOtp($mobile, $otp)
+    public static function verifyOtp($mobile, $otp)
     {
         $ch = curl_init(config('msg91.url') . 'otp/verify?mobile=' . $mobile . '&otp=' . $otp);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('accept:application/json', 'authkey:' . config('msg91.key'), 'content-type:application/json'));

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Faker\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -80,7 +79,6 @@ class UserController extends Controller
      */
     public function googleLogin(Request $request)
     {
-        $helper = new AppHelper();
         $user = User::where('email', $request->email)->first();
 
         if ($user) {
@@ -95,7 +93,7 @@ class UserController extends Controller
             $data['name'] = $request->name;
             $data['email'] = $request->email;
             $data['googleId'] = $request->googleId;
-            $data['password'] = Hash::make($helper->randomid(10, true));
+            $data['password'] = Hash::make(AppHelper::randomid(10, true));
 
             $user = User::create($data);
 

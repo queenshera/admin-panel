@@ -1,28 +1,18 @@
-# AWS S3 Setup
+# File Upload Setup
 Read up here for getting started and understanding the setup of AWS S3 service
 
-## Configuration
+## Configuration for AWS
 - Ensure you have created storage bucket, access key and secret key from AWS dashboard.
-- If you did not create it yet, you can do so by following [this](https://msg91.com/help/MSG91/step-by-step-process-to-configure-sms) guide.
+- If you did not create it yet, you can do so by following [this](https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html) guide.
 - Add your AWS details to .env file
 
-## Using AWS S3 storage
-### Create object of AppHelper class
-```
-$appHelper = new \Queenshera\AdminPanel\Helpers\AppHelper();
-```
-### Now you can call any function of AppHelper class using this object 
+## Uploading files to storage
+- You can upload files to local storage or S3 storage by calling a function.
+- File uploading to local storage or AWS S3 will depend on value of AWS_ENABLED provided in .env file
 
-#### Upload files to AWS storage
+#### Upload files to storage
 ```
-    $response = $appHelper->uploadFileToS3($file, $fileNamePath);
-//  $file is the raw that is coming directly from HTML form
-//  $fileNamePath is path of file storage including file name and extension
-```
-
-#### Upload files to local storage
-```
-    $response = $appHelper->uploadFileToLocal($file, $fileNamePath);
+    $response = \Queenshera\AdminPanel\Helpers\AppHelper::uploadFileToStorage($file, $fileNamePath);
 //  $file is the raw that is coming directly from HTML form
 //  $fileNamePath is path of file storage including file name and extension
 ```

@@ -24,8 +24,8 @@ class InstallCommand extends Command
 
         if (!in_array('None', $packages)) {
 
-            // install other packages
-            if (!$this->requireComposerPackages('illuminate/support')) {
+            // Install compulsory packages
+            /*if (!$this->requireComposerPackages('illuminate/support')) {
                 return 1;
             }
             if (!$this->requireComposerPackages('illuminate/console')) {
@@ -45,8 +45,9 @@ class InstallCommand extends Command
             }
             if (!$this->requireComposerPackages('bacon/bacon-qr-code')) {
                 return 1;
-            }
+            }*/
 
+            // Install optional packages
             if (in_array('All', $packages) || in_array('Debugbar', $packages)) {
                 if (!$this->requireComposerPackages('barryvdh/laravel-debugbar')) {
                     return 1;
@@ -143,7 +144,7 @@ class InstallCommand extends Command
     protected function requireComposerPackages($packages)
     {
         $command = array_merge(
-            $command ?? ['composer', 'require'],
+            $command ?? ['composer', 'require', '--with-all-dependencies'],
             is_array($packages) ? $packages : func_get_args()
         );
 

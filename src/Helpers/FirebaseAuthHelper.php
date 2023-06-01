@@ -9,7 +9,7 @@ use Kreait\Firebase\Messaging\CloudMessage;
  */
 class FirebaseAuthHelper
 {
-    private function firebaseAuthentication()
+    private static function authentication()
     {
         $factory = (new \Kreait\Firebase\Factory)->withServiceAccount(app_path() . '/Http/Firebase/adminsdk.json');
         $auth = $factory->createAuth();
@@ -22,9 +22,9 @@ class FirebaseAuthHelper
      *
      * @return \Kreait\Firebase\Auth\SignInResult
      */
-    public function signInAnonymously()
+    public static function signInAnonymously()
     {
-        return $this->firebaseAuthentication()->signInAnonymously();
+        return FirebaseAuthHelper::authentication()->signInAnonymously();
     }
 
     /**
@@ -34,9 +34,9 @@ class FirebaseAuthHelper
      * @param $password
      * @return \Kreait\Firebase\Auth\SignInResult
      */
-    public function signInWithEmailAndPassword($email, $password)
+    public static function signInWithEmailAndPassword($email, $password)
     {
-        return $this->firebaseAuthentication()->signInWithEmailAndPassword($email, $password);
+        return FirebaseAuthHelper::authentication()->signInWithEmailAndPassword($email, $password);
     }
 
     /**
@@ -45,9 +45,9 @@ class FirebaseAuthHelper
      * @param $refreshToken
      * @return \Kreait\Firebase\Auth\SignInResult
      */
-    public function signInWithRefreshToken($refreshToken)
+    public static function signInWithRefreshToken($refreshToken)
     {
-        return $this->firebaseAuthentication()->signInWithRefreshToken($refreshToken);
+        return FirebaseAuthHelper::authentication()->signInWithRefreshToken($refreshToken);
     }
 
     /**
@@ -56,9 +56,9 @@ class FirebaseAuthHelper
      * @param $uid
      * @return \Kreait\Firebase\Auth\SignInResult
      */
-    public function signInWithUid($uid)
+    public static function signInWithUid($uid)
     {
-        return $this->firebaseAuthentication()->signInAsUser($uid);
+        return FirebaseAuthHelper::authentication()->signInAsUser($uid);
     }
 
 

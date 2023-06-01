@@ -4,7 +4,6 @@ namespace Queenshera\AdminPanel\Helpers;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Storage;
 use NumberFormatter;
 
 /**
@@ -20,7 +19,7 @@ class AppHelper
      * @param $decimals
      * @return string
      */
-    public function retfloat($number, $decimals = 2)
+    public static function retfloat($number, $decimals = 2)
     {
         return number_format((float)$number, $decimals, '.', '');
     }
@@ -31,7 +30,7 @@ class AppHelper
      * @param float $amount
      * @return string
      */
-    public function formatCurrency(float $amount)
+    public static function formatCurrency(float $amount)
     {
         $value = number_format($amount, 2, '.', ',');
 
@@ -48,7 +47,7 @@ class AppHelper
      * @param float $amount
      * @return string
      */
-    public function getAmountInWords(float $amount)
+    public static function getAmountInWords(float $amount)
     {
         $amount = number_format($amount, 2, '.', '');
         $formatter = new NumberFormatter($locale ?? App::getLocale(), NumberFormatter::SPELLOUT);
@@ -68,7 +67,7 @@ class AppHelper
      * @param $length
      * @return int
      */
-    public function randomDigits($length = 6)
+    public static function randomDigits($length = 6)
     {
         return rand(pow(10, $length - 1), pow(10, $length) - 1);
     }
@@ -81,7 +80,7 @@ class AppHelper
      * @param $upperCase
      * @return string
      */
-    public function randomid($length = 10, $upperCase = false)
+    public static function randomid($length = 10, $upperCase = false)
     {
         if ($upperCase) {
             return strtoupper(substr(md5(time() * rand(1000000, 9999999)), 0, $length));
@@ -96,7 +95,7 @@ class AppHelper
      * @param Carbon $endDate
      * @return array
      */
-    public function getMonthListFromToDate(Carbon $startDate, Carbon $endDate)
+    public static function getMonthListFromToDate(Carbon $startDate, Carbon $endDate)
     {
         $startDate = $startDate->startOfMonth();
         $endDate = $endDate->startOfMonth();
@@ -115,27 +114,7 @@ class AppHelper
      * @param $fileNamePath
      * @return string
      */
-    public function uploadFileToStorage($file, $fileNamePath)
-    {
-        if (config('filesystems.disks.s3.enabled')) {
-            Storage::disk('s3')->put($fileNamePath, file_get_contents($file));
-            $filePath = config('filesystems.disks.s3.url') . $fileNamePath;
-            return $filePath;
-        }
-
-        Storage::put('public/' . $fileNamePath, file_get_contents($file));
-        $filePath = config('app.url') . '/storage/' . $fileNamePath;
-        return $filePath;
-    }
-
-    /**
-     * This function is used to upload file to storage depending on value of aws enabled status
-     *
-     * @param $file
-     * @param $fileNamePath
-     * @return string
-     */
-    public function livewireFileUpload($file, $fileNamePath)
+    public static function uploadFileToStorage($file, $fileNamePath)
     {
         if (config('filesystems.disks.s3.enabled')) {
             $file->storeAs('', $fileNamePath, 's3');

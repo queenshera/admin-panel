@@ -27,7 +27,7 @@ class VerificationController extends Controller
             return $this->redirectTo();
         }
 
-        return property_exists($this, 'redirectTo') ? $this->redirectTo : route('home');
+        return property_exists($this, 'redirectTo') ? $this->redirectTo : RouteServiceProvider::HOME;
     }
 
     /**

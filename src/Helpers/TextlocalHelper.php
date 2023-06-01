@@ -15,7 +15,7 @@ class TextlocalHelper
      * @param $message
      * @return mixed
      */
-    public function sendMessage($numbers, $message)
+    public static function sendMessage($numbers, $message)
     {
         $message = rawurlencode($message);
 
@@ -41,7 +41,7 @@ class TextlocalHelper
      * @param $timestamp
      * @return mixed
      */
-    public function scheduleMessage($numbers, $message, $timestamp)
+    public static function scheduleMessage($numbers, $message, $timestamp)
     {
         $message = rawurlencode($message);
 
@@ -66,7 +66,7 @@ class TextlocalHelper
      *
      * @return mixed
      */
-    public function getScheduledMessages()
+    public static function getScheduledMessages()
     {
         $data['apikey'] = config('textlocal.key');
 
@@ -86,7 +86,7 @@ class TextlocalHelper
      * @param $messageId
      * @return mixed
      */
-    public function cancelScheduledMessages($messageId)
+    public static function cancelScheduledMessages($messageId)
     {
         $data['apikey'] = config('textlocal.key');
         $data['sent_id'] = $messageId;
@@ -106,7 +106,7 @@ class TextlocalHelper
      *
      * @return mixed
      */
-    public function checkBalance()
+    public static function checkBalance()
     {
         $data['apikey'] = config('textlocal.key');
 
@@ -125,7 +125,7 @@ class TextlocalHelper
      *
      * @return mixed
      */
-    public function getTemplates()
+    public static function getTemplates()
     {
         $data['apikey'] = config('textlocal.key');
 
@@ -144,7 +144,7 @@ class TextlocalHelper
      *
      * @return mixed
      */
-    public function getSenders()
+    public static function getSenders()
     {
         $data['apikey'] = config('textlocal.key');
 
@@ -163,7 +163,7 @@ class TextlocalHelper
      * @param $url
      * @return mixed
      */
-    public function createShortUrl($url)
+    public static function createShortUrl($url)
     {
         $data['apikey'] = config('textlocal.key');
         $data['url'] = $url;

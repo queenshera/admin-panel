@@ -9,7 +9,7 @@ use Kreait\Firebase\Messaging\CloudMessage;
  */
 class FirebaseMessagingHelper
 {
-    private function firebaseMessaging()
+    private static function createMessage()
     {
         $factory = (new \Kreait\Firebase\Factory)->withServiceAccount(app_path() . '/Http/Firebase/adminsdk.json');
         $message = $factory->createMessaging();
@@ -24,9 +24,9 @@ class FirebaseMessagingHelper
      * @param $tokens
      * @return \string[][]
      */
-    public function subscribeToTopic($topic, $tokens)
+    public static function subscribeToTopic($topic, $tokens)
     {
-        return $this->firebaseMessaging()->subscribeToTopic($topic, $tokens);
+        return FirebaseMessagingHelper::createMessage()->subscribeToTopic($topic, $tokens);
     }
 
     /**
@@ -36,9 +36,9 @@ class FirebaseMessagingHelper
      * @param $tokens
      * @return \string[][]
      */
-    public function unsubscribeFromTopic($topic, $tokens)
+    public static function unsubscribeFromTopic($topic, $tokens)
     {
-        return $this->firebaseMessaging()->unsubscribeFromTopic($topic, $tokens);
+        return FirebaseMessagingHelper::createMessage()->unsubscribeFromTopic($topic, $tokens);
     }
 
     /**
@@ -47,9 +47,9 @@ class FirebaseMessagingHelper
      * @param $tokens
      * @return \string[][]
      */
-    public function unsubscribeFromAllTopics($tokens)
+    public static function unsubscribeFromAllTopics($tokens)
     {
-        return $this->firebaseMessaging()->unsubscribeFromAllTopics($tokens);
+        return FirebaseMessagingHelper::createMessage()->unsubscribeFromAllTopics($tokens);
     }
 
     /**
@@ -59,9 +59,9 @@ class FirebaseMessagingHelper
      * @return \Kreait\Firebase\Messaging\TopicSubscriptions
      * @throws \Kreait\Firebase\Exception\MessagingException
      */
-    public function getSubscriptions($token)
+    public static function getSubscriptions($token)
     {
-        $appInstance = $this->firebaseMessaging()->getAppInstance($token);
+        $appInstance = FirebaseMessagingHelper::createMessage()->getAppInstance($token);
 
         $subscriptions = $appInstance->topicSubscriptions();
 
@@ -78,7 +78,7 @@ class FirebaseMessagingHelper
      * @throws \Kreait\Firebase\Exception\FirebaseException
      * @throws \Kreait\Firebase\Exception\MessagingException
      */
-    public function sendToTopics($topic, $notification, $extraData)
+    public static function sendToTopics($topic, $notification, $extraData)
     {
         $message = CloudMessage::fromArray([
             'topic' => $topic,
@@ -86,7 +86,7 @@ class FirebaseMessagingHelper
             'data' => $extraData,
         ])->withHighestPossiblePriority();
 
-        $this->firebaseMessaging()->send($message);
+        FirebaseMessagingHelper::createMessage()->send($message);
         return true;
     }
 
@@ -100,7 +100,7 @@ class FirebaseMessagingHelper
      * @throws \Kreait\Firebase\Exception\FirebaseException
      * @throws \Kreait\Firebase\Exception\MessagingException
      */
-    public function sendToSpecificDevice($deviceToken, $notification, $extraData)
+    public static function sendToSpecificDevice($deviceToken, $notification, $extraData)
     {
         $message = CloudMessage::fromArray([
             'token' => $deviceToken,
@@ -108,7 +108,7 @@ class FirebaseMessagingHelper
             'data' => $extraData,
         ])->withHighestPossiblePriority();
 
-        $this->firebaseMessaging()->send($message);
+        FirebaseMessagingHelper::createMessage()->send($message);
         return true;
     }
 
@@ -122,14 +122,14 @@ class FirebaseMessagingHelper
      * @throws \Kreait\Firebase\Exception\FirebaseException
      * @throws \Kreait\Firebase\Exception\MessagingException
      */
-    public function sendToMultipleDevices($deviceTokens, $notification, $extraData)
+    public static function sendToMultipleDevices($deviceTokens, $notification, $extraData)
     {
         $message = CloudMessage::fromArray([
             'notification' => $notification,
             'data' => $extraData,
         ])->withHighestPossiblePriority();
 
-        $this->firebaseMessaging()->sendMulticast($message, $deviceTokens);
+        FirebaseMessagingHelper::createMessage()->sendMulticast($message, $deviceTokens);
         return true;
     }
 
@@ -141,9 +141,9 @@ class FirebaseMessagingHelper
      * @throws \Kreait\Firebase\Exception\FirebaseException
      * @throws \Kreait\Firebase\Exception\MessagingException
      */
-    public function validateTokens($deviceTokens)
+    public static function validateTokens($deviceTokens)
     {
-        $result = $this->firebaseMessaging()->validateRegistrationTokens($deviceTokens);
+        $result = FirebaseMessagingHelper::createMessage()->validateRegistrationTokens($deviceTokens);
 
         return $result;
     }

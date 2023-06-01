@@ -83,12 +83,12 @@ class RegisterController extends Controller
             $photoName .= substr($name, 0, 1);
         }
         $photoName = 'https://ui-avatars.com/api/?name=' . $photoName . '&color=7F9CF5&background=EBF4FF';
-        Session::put('photo',$photoName);
+        Session::put('photo', $photoName);
 
         if (method_exists($this, 'redirectTo')) {
             return $this->redirectTo();
         }
 
-        return property_exists($this, 'redirectTo') ? $this->redirectTo : route('home');
+        return property_exists($this, 'redirectTo') ? $this->redirectTo : RouteServiceProvider::HOME;
     }
 }

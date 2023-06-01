@@ -2,9 +2,20 @@
     "name": "queenshera/admin-panel",
     "description": "AdminLTE based admin panel while setting your project",
     "license": "MIT",
+    "support": {
+        "issues": "https://github.com/queenshera/laravel-admin-panel/issues",
+        "source": "https://github.com/queenshera/laravel-admin-panel"
+    },
     "require": {
         "php": "^8.0",
-        "ext-json": "*"
+        "ext-json": "*",
+        "illuminate/console": "^10.12",
+        "illuminate/support": "^10.12",
+        "laravel/ui": "^4.2",
+        "livewire/livewire": "^2.12",
+        "jenssegers/agent": "^2.6",
+        "pragmarx/google2fa-laravel": "^2.1",
+        "bacon/bacon-qr-code": "^2.0"
     },
     "autoload": {
         "psr-4": {
@@ -22,5 +33,8 @@
             "email": "support@queensherainfotech.com"
         }
     ],
+    "config": {
+        "sort-packages": true
+    },
     "minimum-stability": "dev"
 }

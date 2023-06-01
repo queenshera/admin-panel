@@ -53,8 +53,7 @@ class UpdateUserProfile extends Component
         $name = 'photo_' . date('ymdHis') . '.' . $this->photo->getClientOriginalExtension();
         $storagePath = 'profile/' . $name;
 
-        $helper = new AppHelper();
-        $filePath = $helper->livewireFileUpload($this->photo, $storagePath);
+        $filePath = AppHelper::uploadFileToStorage($this->photo, $storagePath);
 
         $this->user['photo'] = $filePath;
         User::find(auth()->user()->id)->update($this->user);

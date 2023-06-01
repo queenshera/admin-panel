@@ -8,20 +8,12 @@ Read up here for getting started and understanding the setup of Razorpay payment
 - If you did not create it yet, you can do so by following [this](https://razorpay.com/docs/api/authentication/#generate-api-keys) guide.
 - Add your API key details to .env file
 
-## Using Razorpay payment service
-
-### Create object of RazorpayHelper class
-
-```
-$razorpayHelper = new \Queenshera\AdminPanel\Helpers\RazorpayHelper();
-```
-
-### Now you can call any function of RazorpayHelper class using this object
+## You can call any function of RazorpayHelper class for ordering, payment capture, refund, settlements and many more.
 
 #### Create new order
 
 ```
-$response = $razorpayHelper->createOrder($data);
+$response = RazorpayHelper::createOrder($data);
 ```
 
 Request payload
@@ -66,7 +58,7 @@ Response data
 #### Get list of all orders
 
 ```
-$response = $razorpayHelper->allOrders();
+$response = RazorpayHelper::allOrders();
 ```
 
 Response data
@@ -113,7 +105,7 @@ Response data
 #### Fetch order details using orderId
 
 ```
-$response = $razorpayHelper->fetchOrder($orderId);
+$response = RazorpayHelper::fetchOrder($orderId);
 ```
 
 Response data
@@ -141,7 +133,7 @@ Response data
 #### Get all payments made for a specific order
 
 ```
-$response = $razorpayHelper->fetchOrderPayments($orderId);
+$response = RazorpayHelper::fetchOrderPayments($orderId);
 ```
 
 Response data
@@ -187,7 +179,7 @@ Response data
 #### Capture payment manually
 
 ```
-$response = $razorpayHelper->capturePayment($paymentId, $data);
+$response = RazorpayHelper::capturePayment($paymentId, $data);
 ```
 
 Request payload
@@ -207,7 +199,7 @@ Response data
 #### Fetch payment details
 
 ```
-$response = $razorpayHelper->fetchPayment($paymentId);
+$response = RazorpayHelper::fetchPayment($paymentId);
 ```
 
 Response data
@@ -251,7 +243,7 @@ Response data
 #### Get list of all settlements
 
 ```
-$response = $razorpayHelper->allSettlements();
+$response = RazorpayHelper::allSettlements();
 ```
 
 Response data
@@ -294,7 +286,7 @@ Response data
 #### Fetch settlement details using settlementId
 
 ```
-$response = $razorpayHelper->fetchSettlement($settlementId);
+$response = RazorpayHelper::fetchSettlement($settlementId);
 ```
 
 Response data
@@ -315,7 +307,7 @@ Response data
 #### Refund payment amount to customer with normal flow (5-7 working days)
 
 ```
-$response = $razorpayHelper->createRefund($paymentId, $data);
+$response = RazorpayHelper::createRefund($paymentId, $data);
 ```
 
 Request payload
@@ -335,7 +327,7 @@ Response data
 #### Refund payment amount to customer with instant flow
 
 ```
-$response = $razorpayHelper->createInstantRefund($paymentId, $data);
+$response = RazorpayHelper::createInstantRefund($paymentId, $data);
 ```
 
 Request payload
@@ -355,7 +347,7 @@ Response data
 #### Get list all refunds
 
 ```
-$response = $razorpayHelper->allRefunds();
+$response = RazorpayHelper::allRefunds();
 ```
 
 Response data
@@ -402,7 +394,7 @@ Response data
 #### Fetch refund details
 
 ```
-$response = $razorpayHelper->fetchRefund($refundId);
+$response = RazorpayHelper::fetchRefund($refundId);
 ```
 
 Response data
@@ -430,7 +422,7 @@ Response data
 #### Create payment link
 
 ```
-$response = $razorpayHelper->createPaymentLink($data);
+$response = RazorpayHelper::createPaymentLink($data);
 ```
 
 Request payload
@@ -493,7 +485,7 @@ Response data
 #### Get list of all payment links
 
 ```
-$response = $razorpayHelper->allPaymentLinks();
+$response = RazorpayHelper::allPaymentLinks();
 ```
 
 Response data
@@ -578,7 +570,7 @@ Response data
 #### Fetch payment link details
 
 ```
-$response = $razorpayHelper->fetchPaymentLink($paymentLinkId);
+$response = RazorpayHelper::fetchPaymentLink($paymentLinkId);
 ```
 
 Response data
@@ -625,7 +617,7 @@ Response data
 #### Cancel payment link
 
 ```
-$response = $razorpayHelper->cancelPaymentLink($paymentLinkId);
+$response = RazorpayHelper::cancelPaymentLink($paymentLinkId);
 ```
 
 Response data
@@ -672,7 +664,7 @@ Response data
 #### Create virtual account
 
 ```
-$response = $razorpayHelper->createVirtualAccount($data);
+$response = RazorpayHelper::createVirtualAccount($data);
 ```
 
 Request payload
@@ -733,7 +725,7 @@ Response data
 #### Get list of all virtual accounts
 
 ```
-$response = $razorpayHelper->allVirtualAccounts();
+$response = RazorpayHelper::allVirtualAccounts();
 ```
 
 Response data
@@ -816,7 +808,7 @@ Response data
 #### Fetch virtual account details
 
 ```
-$response = $razorpayHelper->fetchVirtualAccount($virtualAccountId);
+$response = RazorpayHelper::fetchVirtualAccount($virtualAccountId);
 ```
 
 Response data
@@ -862,7 +854,7 @@ Response data
 #### Fetch payments to virtual account
 
 ```
-$response = $razorpayHelper->fetchVirtualAccountPayments($virtualAccountId);
+$response = RazorpayHelper::fetchVirtualAccountPayments($virtualAccountId);
 ```
 
 Response data
@@ -939,7 +931,7 @@ Response data
 #### close virtual account
 
 ```
-$response = $razorpayHelper->closeVirtualAccount($virtualAccountId);
+$response = RazorpayHelper::closeVirtualAccount($virtualAccountId);
 ```
 
 Response data
@@ -985,7 +977,7 @@ Response data
 #### Create bank account payout
 
 ```
-$response = $razorpayHelper->createBankPayout($data);
+$response = RazorpayHelper::createBankPayout($data);
 ```
 
 Request payload
@@ -1076,7 +1068,7 @@ Response Data
 #### Create UPI payout
 
 ```
-$response = $razorpayHelper->createUpiPayout($data);
+$response = RazorpayHelper::createUpiPayout($data);
 ```
 
 Request payload
@@ -1164,7 +1156,7 @@ Response Data
 #### Create Amazon wallet payout
 
 ```
-$response = $razorpayHelper->createAmazonWalletPayout($data);
+$response = RazorpayHelper::createAmazonWalletPayout($data);
 ```
 
 Request payload
@@ -1315,7 +1307,7 @@ Response Data
 #### Create payout link
 
 ```
-$response = $razorpayHelper->createPayoutLink($data);
+$response = RazorpayHelper::createPayoutLink($data);
 ```
 
 Request payload
@@ -1373,7 +1365,7 @@ Response Data
 #### Get all payout links
 
 ```
-$response = $razorpayHelper->allPayoutLinks();
+$response = RazorpayHelper::allPayoutLinks();
 ```
 
 Response Data
@@ -1442,7 +1434,7 @@ Response Data
 #### Fetch payout link details
 
 ```
-$response = $razorpayHelper->fetchPayoutLink($payoutLinkId);
+$response = RazorpayHelper::fetchPayoutLink($payoutLinkId);
 ```
 
 Response data
@@ -1481,7 +1473,7 @@ Response data
 #### Cancel payout link
 
 ```
-$response = $razorpayHelper->cancelPayoutLink($paymentLinkId);
+$response = RazorpayHelper::cancelPayoutLink($paymentLinkId);
 ```
 
 Response data
