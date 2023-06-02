@@ -25,11 +25,15 @@
 
     @livewire('update-user-password')
 
-    @livewire('two-factor-authentication')
+    @if(\Queenshera\AdminPanel\Features::enabled(\Queenshera\AdminPanel\Features::twoFactorAuthentication()))
+        @livewire('two-factor-authentication')
+    @endif
 
     @livewire('logout-other-browser-sessions')
 
-    @livewire('delete-account')
+    @if(\Queenshera\AdminPanel\Features::enabled(\Queenshera\AdminPanel\Features::accountDeletion()))
+        @livewire('delete-account')
+    @endif
 @endsection
 
 @section('custom-scripts')

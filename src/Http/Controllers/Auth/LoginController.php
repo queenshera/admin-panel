@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
+use Queenshera\AdminPanel\Features;
 
 class LoginController extends Controller
 {
@@ -129,6 +131,59 @@ class LoginController extends Controller
         $this->incrementLoginAttempts($request);
 
         return $this->sendFailedLoginResponse($request);
+    }
+
+    public function twoFactorRecovery()
+    {
+        if (!Features::enabled(Features::twoFactorAuthRecovery())) {
+            abort(404);
+        }
+        return view('auth.2fa-recovery');
+    }
+
+    public function attempt2faRecovery(Request $request)
+    {
+        $oldRequest = Session::get('request');
+        $user = User::where('email', $oldRequest['email'])->first();
+
+        $google2fa = app('pragmarx.google2fa');
+
+        if (empty($user->two_factor_secret) ||
+            empty($request->recoveryCode) ||
+            !$this->validRecoveryCode($user, $request->recoveryCode)) {
+            return back()->withError('The provided two factor recovery code was invalid.');
+        }
+
+        $user->forceFill([
+            'two_factor_recovery_codes' => encrypt(str_replace(
+                $request->recoveryCode,
+                Str::random(10) . '-' . Str::random(10),
+                decrypt($user->two_factor_recovery_codes)
+            )),
+        ])->save();
+
+        $request['email'] = $oldRequest['email'];
+        $request['password'] = $oldRequest['password'];
+
+        if ($this->attemptLogin($request)) {
+            if ($request->hasSession()) {
+                $request->session()->put('auth.password_confirmed_at', time());
+            }
+
+            return $this->sendLoginResponse($request);
+        }
+
+        // If the login attempt was unsuccessful we will increment the number of attempts
+        // to login and redirect the user back to the login form. Of course, when this
+        // user surpasses their maximum number of attempts they will get locked out.
+        $this->incrementLoginAttempts($request);
+
+        return $this->sendFailedLoginResponse($request);
+    }
+
+    private function validRecoveryCode($user, $recoveryCode)
+    {
+        return in_array($recoveryCode, json_decode(decrypt($user->two_factor_recovery_codes)));
     }
 
     public function redirectPath()

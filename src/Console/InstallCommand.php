@@ -19,34 +19,10 @@ class InstallCommand extends Command
      */
     public function handle()
     {
-        $this->info("Do you want to install packages? Your code will not work properly if you don't have packages installed.");
+        $this->info("Do you want to install optional packages? Your code will not work properly if you don't have packages installed.");
         $packages = $this->choice('Select none, single or multiple packages seperated by comma that you want to install', ['All', 'Debugbar', 'DomPDF', 'AWS S3 Storage', 'Pest Tests', 'Firebase', 'None'], 0, null, true);
 
         if (!in_array('None', $packages)) {
-
-            // Install compulsory packages
-            /*if (!$this->requireComposerPackages('illuminate/support')) {
-                return 1;
-            }
-            if (!$this->requireComposerPackages('illuminate/console')) {
-                return 1;
-            }
-            if (!$this->requireComposerPackages('laravel/ui')) {
-                return 1;
-            }
-            if (!$this->requireComposerPackages('livewire/livewire')) {
-                return 1;
-            }
-            if (!$this->requireComposerPackages('jenssegers/agent')) {
-                return 1;
-            }
-            if (!$this->requireComposerPackages('pragmarx/google2fa-laravel')) {
-                return 1;
-            }
-            if (!$this->requireComposerPackages('bacon/bacon-qr-code')) {
-                return 1;
-            }*/
-
             // Install optional packages
             if (in_array('All', $packages) || in_array('Debugbar', $packages)) {
                 if (!$this->requireComposerPackages('barryvdh/laravel-debugbar')) {
@@ -88,6 +64,7 @@ class InstallCommand extends Command
             }
         }
 
+        copy(__DIR__ . '/../../stubs/config/adminPanel.php', config_path('adminPanel.php'));
         copy(__DIR__ . '/../../stubs/config/app.php', config_path('app.php'));
         copy(__DIR__ . '/../../stubs/config/filesystems.php', config_path('filesystems.php'));
         copy(__DIR__ . '/../../stubs/config/msg91.php', config_path('msg91.php'));
