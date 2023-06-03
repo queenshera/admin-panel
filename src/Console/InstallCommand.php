@@ -157,7 +157,7 @@ class InstallCommand extends Command
     protected function requireComposerDevPackages($packages)
     {
         $command = array_merge(
-            $command ?? ['composer', 'require', '--dev'],
+            $command ?? ['composer', 'require', '--dev', '--with-all-dependencies'],
             is_array($packages) ? $packages : func_get_args()
         );
 
