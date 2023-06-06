@@ -8,5 +8,8 @@ return [
         Features::twoFactorAuthentication(),
         Features::twoFactorAuthRecovery(),
         Features::accountDeletion(),
+        Features::registration(),
+        Features::emailVerification(),
+        Features::resetPasswords(),
     ],
 ];

@@ -69,14 +69,14 @@
 
                 </div>
             </form>
-            @if (Route::has('password.request'))
+            @if (\Queenshera\AdminPanel\Features::enabled(\Queenshera\AdminPanel\Features::resetPasswords()))
                 <p class="mb-1">
                     <a href="{{ route('password.request') }}">
                         I forgot my password
                     </a>
                 </p>
             @endif
-            @if (Route::has('register'))
+            @if (\Queenshera\AdminPanel\Features::enabled(\Queenshera\AdminPanel\Features::registration()))
                 <p class="mb-0">
                     <a href="{{route('register')}}" class="text-center">Register here</a>
                 </p>

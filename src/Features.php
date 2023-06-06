@@ -28,4 +28,19 @@ class Features
     {
         return 'account-deletion';
     }
+
+    public static function registration()
+    {
+        return 'registration';
+    }
+
+    public static function emailVerification()
+    {
+        return 'email-verification';
+    }
+
+    public static function resetPasswords()
+    {
+        return 'reset-password';
+    }
 }

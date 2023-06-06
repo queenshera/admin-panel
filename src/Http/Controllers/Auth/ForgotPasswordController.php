@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use Queenshera\AdminPanel\Features;
 
 class ForgotPasswordController extends Controller
 {
@@ -19,4 +20,12 @@ class ForgotPasswordController extends Controller
     */
 
     use SendsPasswordResetEmails;
+
+    public function showLinkRequestForm()
+    {
+        if (!Features::enabled(Features::resetPasswords())) {
+            abort(404);
+        }
+        return view('auth.passwords.email');
+    }
 }

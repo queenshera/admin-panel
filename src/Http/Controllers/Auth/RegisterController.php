@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Queenshera\AdminPanel\Features;
 
 class RegisterController extends Controller
 {
@@ -90,5 +91,13 @@ class RegisterController extends Controller
         }
 
         return property_exists($this, 'redirectTo') ? $this->redirectTo : RouteServiceProvider::HOME;
+    }
+
+    public function showRegistrationForm()
+    {
+        if (!Features::enabled(Features::registration())) {
+            abort(404);
+        }
+        return view('auth.register');
     }
 }
